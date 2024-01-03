@@ -14,7 +14,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@stonkerino/ts-rest": ["packages/ts-rest/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
