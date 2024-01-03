@@ -2,15 +2,14 @@
  * This is not a production server yet!
  * This is only a minimal backend to get started.
  */
+import { stonkerinoTsRestContract } from '@stonkerino/ts-rest';
 import { ResponseValidationError } from '@ts-rest/core';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
-import express from 'express';
-import * as path from 'path';
-// import { generateOpenApi } from '@ts-rest/open-api';
-import { stonkerinoTsRestContract } from '@stonkerino/ts-rest';
+import { generateOpenApi } from '@ts-rest/open-api';
 import * as bodyParser from 'body-parser';
-import { NextFunction, Request, Response } from 'express';
-// import { serve, setup } from 'swagger-ui-express';
+import express, { NextFunction, Request, Response } from 'express';
+import * as path from 'path';
+import * as swaggerUi from 'swagger-ui-express';
 import cors = require('cors');
 
 const app = express();
@@ -37,16 +36,16 @@ const completedRouter = s.router(stonkerinoTsRestContract, {
   },
 });
 
-// const openapi = generateOpenApi(apiBlog, {
-//   info: { title: 'Play API', version: '0.1' },
-// });
+const openApiDocument = generateOpenApi(stonkerinoTsRestContract, {
+  info: { title: 'Stonkerino API', version: '0.0.1' },
+});
 
 // const apiDocs = express.Router();
 
 // apiDocs.use(serve);
 // apiDocs.get('/', setup(openapi));
 
-// app.use('/api-docs', apiDocs);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 app.get('/test', (req, res) => {
   return res.json(req.query);
