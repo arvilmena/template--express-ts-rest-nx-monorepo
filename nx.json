@@ -9,6 +9,10 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
+    "serve": {
+      "cache": false,
+      "dependsOn": ["^build"]
+    },
     "lint": {
       "cache": true,
       "inputs": [
