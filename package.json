@@ -2,7 +2,9 @@
   "name": "@myawesomeorg/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "pnpm exec nx run backend:serve:development"
+  },
   "private": true,
   "dependencies": {
     "@swc/helpers": "~0.5.2",
