@@ -9,7 +9,7 @@ const PostSchema = z.object({
   body: z.string(),
 });
 
-export const stonkerinoTsRestContract = c.router({
+export const myTsRestContract = c.router({
   createPost: {
     method: 'POST',
     path: '/posts',

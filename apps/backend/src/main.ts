@@ -2,7 +2,7 @@
  * This is not a production server yet!
  * This is only a minimal backend to get started.
  */
-import { stonkerinoTsRestContract } from '@stonkerino/ts-rest';
+import { myTsRestContract } from '@myawesomeorg/ts-rest';
 import { ResponseValidationError } from '@ts-rest/core';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { generateOpenApi } from '@ts-rest/open-api';
@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 const s = initServer();
 
-const completedRouter = s.router(stonkerinoTsRestContract, {
+const completedRouter = s.router(myTsRestContract, {
   getPost: async ({ params: { id } }) => {
     return {
       status: 200,
@@ -36,8 +36,8 @@ const completedRouter = s.router(stonkerinoTsRestContract, {
   },
 });
 
-const openApiDocument = generateOpenApi(stonkerinoTsRestContract, {
-  info: { title: 'Stonkerino API', version: '0.0.1' },
+const openApiDocument = generateOpenApi(myTsRestContract, {
+  info: { title: 'MyAwesomeOrg API', version: '0.0.1' },
 });
 
 // const apiDocs = express.Router();
@@ -51,7 +51,7 @@ app.get('/test', (req, res) => {
   return res.json(req.query);
 });
 
-createExpressEndpoints(stonkerinoTsRestContract, completedRouter, app);
+createExpressEndpoints(myTsRestContract, completedRouter, app);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
