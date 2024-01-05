@@ -21,6 +21,7 @@
       "@myawesomeorg/constants": ["packages/constants/src/index.ts"],
       "@myawesomeorg/db": ["packages/db/src/index.ts"],
       "@myawesomeorg/file-system": ["packages/file-system/src/index.ts"],
+      "@myawesomeorg/frontend-astro": ["apps/frontend-astro/src/index.ts"],
       "@myawesomeorg/ts-rest": ["packages/ts-rest/src/index.ts"],
       "@myawesomeorg/utils": ["packages/utils/src/index.ts"],
       "@stonker/events": ["packages/stonker-events/src/index.ts"],
