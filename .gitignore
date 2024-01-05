@@ -38,4 +38,14 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# NX
 .nx/cache
+
+# Puppeteer
+/.cache
+
+# ENV
+/.env.local
+
+# Data
+/data

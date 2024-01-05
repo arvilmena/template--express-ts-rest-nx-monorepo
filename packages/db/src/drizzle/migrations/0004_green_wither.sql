@@ -1,0 +1,1 @@
+ALTER TABLE daily_category ADD `is_most_children` integer NOT NULL;

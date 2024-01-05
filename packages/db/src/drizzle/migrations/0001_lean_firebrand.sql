@@ -1,0 +1,1 @@
+ALTER TABLE daily_category ADD `is_most_parent` integer DEFAULT false NOT NULL;

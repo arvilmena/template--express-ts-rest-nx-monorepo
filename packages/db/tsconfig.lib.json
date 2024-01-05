@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+
+    "strictNullChecks": true,
+    "outDir": "../../dist/out-tsc",
+    "declaration": true,
+    "types": ["node"],
+
+    // Fixes drizzle/migrate.ts:
+    // Top-level 'await' expressions are only allowed when the 'module' option is set to
+    // 'es2022', 'esnext', 'system', 'node16', or 'nodenext', and the 'target' option is set to 'es2017' or higher.
+    "module": "esnext",
+    "target": "es2022"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
+}

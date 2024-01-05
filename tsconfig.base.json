@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "strict": true,
+    "strictNullChecks": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -11,12 +12,19 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["esnext", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@myawesomeorg/ts-rest": ["packages/ts-rest/src/index.ts"]
+      "@myawesomeorg/config": ["packages/config/src/index.ts"],
+      "@myawesomeorg/constants": ["packages/constants/src/index.ts"],
+      "@myawesomeorg/db": ["packages/db/src/index.ts"],
+      "@myawesomeorg/file-system": ["packages/file-system/src/index.ts"],
+      "@myawesomeorg/ts-rest": ["packages/ts-rest/src/index.ts"],
+      "@myawesomeorg/utils": ["packages/utils/src/index.ts"],
+      "@stonker/events": ["packages/stonker-events/src/index.ts"],
+      "@stonker/stonker": ["packages/stonker/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

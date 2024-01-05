@@ -10,6 +10,7 @@ import * as bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from 'express';
 import * as path from 'path';
 import * as swaggerUi from 'swagger-ui-express';
+import { puppeteerService } from './stonker';
 import cors = require('cors');
 
 const app = express();
@@ -61,6 +62,14 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
   next(err);
 });
+
+/**
+ * Custom routes starts
+ */
+app.get('/open-browser', async () => {
+  return await puppeteerService.openBrowser();
+});
+/* Custom routes ends */
 
 const port = process.env.port || 3333;
 const server = app.listen(port, () => {

@@ -1,0 +1,1 @@
+ALTER TABLE `daily_category` RENAME COLUMN `is_most_children` TO `is_tail`;

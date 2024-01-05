@@ -1,0 +1,48 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1702971643477,
+      "tag": "0000_huge_bushwacker",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1703600680568,
+      "tag": "0001_lean_firebrand",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1703600842141,
+      "tag": "0002_jazzy_talon",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1703601332508,
+      "tag": "0003_dry_supernaut",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1703606544315,
+      "tag": "0004_green_wither",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1703606665085,
+      "tag": "0005_chemical_old_lace",
+      "breakpoints": true
+    }
+  ]
+}
