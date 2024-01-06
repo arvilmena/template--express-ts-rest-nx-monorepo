@@ -1,9 +1,9 @@
 import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
-  srcDir: './apps/frontend-astro/src',
-  publicDir: './apps/frontend-astro/public',
-  outDir: './dist/apps/frontend-astro',
+  srcDir: './src',
+  publicDir: './public',
+  outDir: '../../dist/apps/frontend-astro',
   vite: {
     server: {
       fs: {

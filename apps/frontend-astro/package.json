@@ -3,12 +3,12 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "pnpm -C \"./../../\" exec astro dev",
+    "dev": "astro dev",
     "start": "pnpm -C \"./../../\" exec astro dev",
     "build": "nx exec -- pnpm run _build ",
     "preview": "pnpm -C \"./../../\" exec astro preview",
     "lint": "nx exec -- pnpm -C \"./../../\" exec astro check",
-    "astro": "pnpm -C \"./../../\" exec astro",
+    "astro": "astro",
     "_build": "pnpm -C \"./../../\" exec astro check && pnpm -C \"./../../\" exec astro build"
   },
   "dependencies": {

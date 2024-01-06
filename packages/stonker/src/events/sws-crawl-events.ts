@@ -31,12 +31,12 @@ import {
   killPidProcess,
   processArg0IsPuppeteer,
 } from '@myawesomeorg/utils';
-import { StonkerCrawler } from '@stonker/stonker';
 import { EventEmitter2 } from 'eventemitter2';
 import { DateTime } from 'luxon';
+import { StonkerCrawler } from '../crawler';
 
 const dailyCrawlFiles = new DailyCrawlFileSystem(
-  StonkerConfig.APP_ROOT_DIR_ABSPATH
+  StonkerConfig.APP_ROOT_DIR_ABSPATH,
 );
 
 export class StonkerEvents {
@@ -53,19 +53,19 @@ export class StonkerEvents {
     private readonly crawlDataSwsCompanyFreeCashFlowRepository: CrawlDataSwsCompanyFreeCashFlowRepository,
     private readonly crawlDataSwsCompanyCategoryRepository: CrawlDataSwsCompanyCategoryRepository,
     private readonly dailyCategoryParentRepository: DailyCategoryParentRepository,
-    private readonly crawler: StonkerCrawler
+    private readonly crawler: StonkerCrawler,
   ) {
     emitter.on(
       SWS_CRAWL_GRID_RESULT_EVENT,
-      this.onSwsCrawlGridResultEvent.bind(this)
+      this.onSwsCrawlGridResultEvent.bind(this),
     );
     emitter.on(
       SWS_CRAWL_COMPANY_PAGE_DATA_CRAWLED_EVENT,
-      this.onSwsCompanyPageDataCrawledEvent.bind(this)
+      this.onSwsCompanyPageDataCrawledEvent.bind(this),
     );
     emitter.on(
       SWS_CRAWL_PUPPETEER_TIME_OUT,
-      this.onSwsCrawlPuppeteerTimeOut.bind(this)
+      this.onSwsCrawlPuppeteerTimeOut.bind(this),
     );
 
     /* all events registered. */
@@ -75,7 +75,7 @@ export class StonkerEvents {
   async onSwsCrawlPuppeteerTimeOut(event: SwsCrawlPuppeteerTimedOutEvent) {
     // kill browser pid
     console.log(
-      `onSwsCrawlPuppeteerTimeOut triggered! attempting to restart the crawl...`
+      `onSwsCrawlPuppeteerTimeOut triggered! attempting to restart the crawl...`,
     );
     const { browserProcess: originalBrowserProcess } = event;
     const { pid } = originalBrowserProcess;
@@ -92,7 +92,7 @@ export class StonkerEvents {
   }
 
   async onSwsCompanyPageDataCrawledEvent(
-    event: SwsCrawlCompanyPageDataCrawledEvent
+    event: SwsCrawlCompanyPageDataCrawledEvent,
   ) {
     // validate API response schema
     const companyApiResponse = event.crawl.data;
@@ -113,7 +113,7 @@ export class StonkerEvents {
     if (event?.dailyCrawl) {
       const dailyCrawlSwsDataFileSystem =
         dailyCrawlFiles.createDailyCrawlSwsDataFileSystem(
-          event.crawledAtManilaTime.luxon
+          event.crawledAtManilaTime.luxon,
         );
       dailyCrawlSwsDataFileSystem.saveSwsCrawlData({
         crawlType: 'sws_company',
@@ -132,8 +132,9 @@ export class StonkerEvents {
         `${
           companyData.unique_symbol
         } - intrinsic_value.iso ${iso} is not PH nor null - from ${JSON.stringify(
-          companyData.analysis.data.extended.data.analysis.value.intrinsic_value
-        )}`
+          companyData.analysis.data.extended.data.analysis.value
+            .intrinsic_value,
+        )}`,
       );
     }
 
@@ -215,13 +216,12 @@ export class StonkerEvents {
         companyData.analysis.data.extended.data.analysis.health
           .levered_free_cash_flow_growth_annual,
     };
-    const swsCompanyData = await this.crawlDataSwsCompanyRepository.createOne(
-      data
-    );
+    const swsCompanyData =
+      await this.crawlDataSwsCompanyRepository.createOne(data);
 
     if (swsCompanyData === undefined) {
       throw new Error(
-        `Failed to create new swsCompanyData: ${data.swsUniqueSymbol}`
+        `Failed to create new swsCompanyData: ${data.swsUniqueSymbol}`,
       );
     }
 
@@ -229,7 +229,7 @@ export class StonkerEvents {
     const _fcfHistoryValues =
       Object.values(
         companyData.analysis.data.extended.data.analysis.health
-          .levered_free_cash_flow_history
+          .levered_free_cash_flow_history,
       ) ?? [];
     if (_fcfHistoryValues.length > 0) {
       const fcfHistory =
@@ -273,7 +273,7 @@ export class StonkerEvents {
           swsCompanyData,
           _s,
           Boolean(_s.level === 1),
-          Boolean(_s.level === 4)
+          Boolean(_s.level === 4),
         );
       const _dailyCategoryId = _d ? _d.dailyCategoryId : null;
       if (_dailyCategoryId && _s.level === 1) {
@@ -334,7 +334,7 @@ export class StonkerEvents {
     if (event?.dailyCrawl?.id) {
       await this.dailyCrawlRepository.markCompletedIfAllCrawlTypesAreCompleted(
         event.dailyCrawl.id,
-        event.crawledAtManilaTime.luxon
+        event.crawledAtManilaTime.luxon,
       );
     }
   }
@@ -353,7 +353,7 @@ export class StonkerEvents {
     // save to file
     const dailyCrawlSwsDataFileSystem =
       dailyCrawlFiles.createDailyCrawlSwsDataFileSystem(
-        crawledAtManilaTime.luxon
+        crawledAtManilaTime.luxon,
       );
     if (crawlType === 'sws_stock_list') {
       // save to file
@@ -378,11 +378,11 @@ export class StonkerEvents {
     let dailyCrawlType: DailyCrawlTypeDbData | undefined;
     if (existingDailyCrawlTypeId) {
       dailyCrawlType = await this.dailyCrawlTypeRepository.findById(
-        existingDailyCrawlTypeId
+        existingDailyCrawlTypeId,
       );
       if (!dailyCrawlType) {
         throw new Error(
-          `dailyCrawlType with id ${existingDailyCrawlTypeId} not found`
+          `dailyCrawlType with id ${existingDailyCrawlTypeId} not found`,
         );
       }
       if (
@@ -397,8 +397,8 @@ export class StonkerEvents {
                 crawlType: dailyCrawlType.crawlType,
                 crawlTypeSpecific: dailyCrawlType.crawlTypeSpecific,
               },
-            }
-          )}`
+            },
+          )}`,
         );
       }
     } else {
@@ -485,7 +485,7 @@ export class StonkerEvents {
     if (event?.dailyCrawl?.id) {
       await this.dailyCrawlRepository.markCompletedIfAllCrawlTypesAreCompleted(
         event.dailyCrawl.id,
-        event.crawledAtManilaTime.luxon
+        event.crawledAtManilaTime.luxon,
       );
     }
   }

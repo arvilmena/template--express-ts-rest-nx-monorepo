@@ -3,6 +3,7 @@
  * This is only a minimal backend to get started.
  */
 import { myTsRestContract } from '@myawesomeorg/ts-rest';
+import { puppeteerService } from '@stonker/stonker';
 import { ResponseValidationError } from '@ts-rest/core';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { generateOpenApi } from '@ts-rest/open-api';
@@ -10,7 +11,6 @@ import * as bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from 'express';
 import * as path from 'path';
 import * as swaggerUi from 'swagger-ui-express';
-import { puppeteerService } from './stonker';
 import cors = require('cors');
 
 const app = express();
