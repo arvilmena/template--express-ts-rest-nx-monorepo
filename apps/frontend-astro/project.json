@@ -2,7 +2,7 @@
   "name": "frontend-astro",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/frontend-astro/src",
-  "projectType": "library",
+  "projectType": "application",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
