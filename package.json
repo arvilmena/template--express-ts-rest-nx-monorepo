@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "pnpm exec nx run backend:serve:development",
-    "lint": "pnpm exec nx run-many -t lint"
+    "lint": "pnpm exec nx run-many -t lint",
+    "dev:frontend": "pnpm exec nx run frontend-astro:dev"
   },
   "private": true,
   "dependencies": {

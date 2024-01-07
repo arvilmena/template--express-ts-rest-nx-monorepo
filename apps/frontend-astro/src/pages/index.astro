@@ -8,7 +8,7 @@ const days = await dayRepository.findAmount(365);
 const now = getCurrentManilaDate();
 ---
 
-<Layout title="Days" breadcrumb={[{ title: 'Reports', url: '/' }]}>
+<Layout title="Days" breadcrumb={[{ title: 'Days', url: '/' }]}>
   {
     days.length > 0 && (
       <ul>
@@ -16,7 +16,7 @@ const now = getCurrentManilaDate();
           const _d = day.dataAt.setZone(MANILA_TIMEZONE);
           return (
             <li>
-              <a href={`/web/reports/${_d.toSQLDate() as string}`}>
+              <a href={`/days/${_d.toSQLDate() as string}`}>
                 {`${_d.toFormat('MMM dd, yyyy (EEEE)')}`}
                 {now.luxon.toSQLDate() === _d.toSQLDate() && (
                   <span class={'text-red-600'}> - Today</span>

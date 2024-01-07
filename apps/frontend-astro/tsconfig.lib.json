@@ -7,6 +7,6 @@
     "types": ["node"]
     // "moduleResolution": "bundler"
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.astro"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

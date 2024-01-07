@@ -1,5 +1,6 @@
 export * from './drizzle/index';
 export * from './drizzle/schema';
+export * from './entity-functions/daily-category.functions';
 export * from './repositories/crawl-data-sws-company-category.repository';
 export * from './repositories/crawl-data-sws-company-free-cash-flow.repository';
 export * from './repositories/crawl-data-sws-company.repository';

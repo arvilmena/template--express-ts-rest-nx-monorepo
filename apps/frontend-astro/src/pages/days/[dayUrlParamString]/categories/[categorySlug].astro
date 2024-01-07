@@ -1,0 +1,176 @@
+---
+import {
+  InferGetStaticParamsType,
+  InferGetStaticPropsType,
+  GetStaticPaths,
+} from 'astro';
+
+export const getStaticPaths = (async () => {
+  const days = await dayRepository.findAmount(365);
+  const r = await Promise.all(
+    days.map(async (d) => {
+      const dayUrlParamString = luxonToManilaSqlFormat(d.dataAt);
+      const categories =
+        await dailyCategoryRepository.getAllMostParentByLuxonDate(
+          dayUrlParamStringToLuxon(dayUrlParamString),
+        );
+      return categories.map((category) => {
+        return {
+          params: { dayUrlParamString, categorySlug: category.slug },
+          props: { dayUrlParamString, category },
+        };
+      });
+    }),
+  );
+  return r.flatMap((x) => x);
+}) satisfies GetStaticPaths;
+
+import {
+  dayRepository,
+  dailyCategoryRepository,
+  crawlDataSwsCompanyRepository,
+} from '@stonker/stonker';
+import Layout from '../../../../layouts/base/Layout.astro';
+import {
+  dayUrlParamStringToLuxon,
+  getCurrentManilaDate,
+  luxonToManilaSqlFormat,
+} from '@myawesomeorg/utils';
+import { dailyCategoryToHumanReadable } from '@myawesomeorg/db';
+const { params, props } = Astro;
+const { dayUrlParamString } = params;
+const { category } = props;
+const categoryName = category
+  ? dailyCategoryToHumanReadable(category, false)
+  : '';
+
+const swsCompanies = !category
+  ? []
+  : await crawlDataSwsCompanyRepository.findAllUnderCategory({
+      categoryId: category.id as number,
+    });
+---
+
+<Layout
+  title={`${categoryName} - ${dayUrlParamString}`}
+  breadcrumb={[
+    { title: 'Days', url: '/' },
+    { title: dayUrlParamString, url: `/days/${dayUrlParamString}` },
+    { title: 'Categories', url: null },
+    { title: categoryName, url: category.slug },
+  ]}
+  fullWidth={true}
+>
+  {category && <h1>{dailyCategoryToHumanReadable(category, false)}</h1>}
+
+  <table id="myTable" class="display w-full">
+    <thead>
+      <tr>
+        <th>swsUniqueSymbol</th>
+        {
+          /* <th>scoreValue</th>
+              <th>scoreIncome</th>
+              <th>scoreHealth</th>
+              <th>scorePast</th>
+              <th>scoreFuture</th>
+              <th>scoreManagement</th>
+              <th>scoreMisc</th> */
+        }
+        <th>scoreScoreTotal</th>
+        <th>scoreSentence</th>
+        <th>intrinsicValueDiscount</th>
+        <th>dividendYield</th>
+        <th>dividendYieldFuture</th>
+        <th>pe</th>
+        <th>peForward1y</th>
+        <th>ps</th>
+        <th>psForward1y</th>
+        {/* <th>snowflakeColor</th> */}
+        <th>sharePrice</th>
+        <th>intrinsicValue</th>
+        <th>intrinsicValueModel</th>
+        <th>roe</th>
+        <th>roeFuture3y</th>
+        <th>priceTarget</th>
+        <th>priceTargetAnalystCount</th>
+        <th>priceTargetHigh</th>
+        <th>priceTargetLow</th>
+        <th>epsAnnualGrowthRate</th>
+        <th>netIncomeAnnualGrowthRate</th>
+        <th>peerPreferredComparison</th>
+        <th>peerPreferredValue</th>
+        <th>dividendPayoutRatio</th>
+        <th>dividendPayoutRatio3Y</th>
+        <th>dividendPayoutRatioMedian3Y</th>
+        <th>dividendPaymentsGrowthAnnual</th>
+        <th>dividendCashPayoutRatio</th>
+        <th>leveredFreeCashFlowAnnualGrowth</th>
+      </tr>
+    </thead>
+    {
+      swsCompanies.length > 0 && (
+        <tbody>
+          {swsCompanies.map((c) => {
+            return (
+              <tr>
+                <td>{c.crawl_data_sws_company.swsUniqueSymbol}</td>
+                {/* <td>{c.crawl_data_sws_company.scoreValue}</td>
+                    <td>{c.crawl_data_sws_company.scoreIncome}</td>
+                    <td>{c.crawl_data_sws_company.scoreHealth}</td>
+                    <td>{c.crawl_data_sws_company.scorePast}</td>
+                    <td>{c.crawl_data_sws_company.scoreFuture}</td>
+                    <td>{c.crawl_data_sws_company.scoreManagement}</td>
+                    <td>{c.crawl_data_sws_company.scoreMisc}</td> */}
+                <td>{c.crawl_data_sws_company.scoreScoreTotal}</td>
+                <td>{c.crawl_data_sws_company.scoreSentence}</td>
+                <td>{c.crawl_data_sws_company.intrinsicValueDiscount}</td>
+                <td>{c.crawl_data_sws_company.dividendYield}</td>
+                <td>{c.crawl_data_sws_company.dividendYieldFuture}</td>
+                <td>{c.crawl_data_sws_company.pe}</td>
+                <td>{c.crawl_data_sws_company.peForward1y}</td>
+                <td>{c.crawl_data_sws_company.ps}</td>
+                <td>{c.crawl_data_sws_company.psForward1y}</td>
+                {/* <td>{c.crawl_data_sws_company.snowflakeColor}</td> */}
+                <td>{c.crawl_data_sws_company.sharePrice}</td>
+                <td>{c.crawl_data_sws_company.intrinsicValue}</td>
+                <td>{c.crawl_data_sws_company.intrinsicValueModel}</td>
+                <td>{c.crawl_data_sws_company.roe}</td>
+                <td>{c.crawl_data_sws_company.roeFuture3y}</td>
+                <td>{c.crawl_data_sws_company.priceTarget}</td>
+                <td>{c.crawl_data_sws_company.priceTargetAnalystCount}</td>
+                <td>{c.crawl_data_sws_company.priceTargetHigh}</td>
+                <td>{c.crawl_data_sws_company.priceTargetLow}</td>
+                <td>{c.crawl_data_sws_company.epsAnnualGrowthRate}</td>
+                <td>{c.crawl_data_sws_company.netIncomeAnnualGrowthRate}</td>
+                <td>{c.crawl_data_sws_company.peerPreferredComparison}</td>
+                <td>{c.crawl_data_sws_company.peerPreferredValue}</td>
+                <td>{c.crawl_data_sws_company.dividendPayoutRatio}</td>
+                <td>{c.crawl_data_sws_company.dividendPayoutRatio3Y}</td>
+                <td>{c.crawl_data_sws_company.dividendPayoutRatioMedian3Y}</td>
+                <td>{c.crawl_data_sws_company.dividendPaymentsGrowthAnnual}</td>
+                <td>{c.crawl_data_sws_company.dividendCashPayoutRatio}</td>
+                <td>
+                  {c.crawl_data_sws_company.leveredFreeCashFlowAnnualGrowth}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      )
+    }
+  </table>
+
+  <script is:inline>
+    $(document).ready(function () {
+      $('#myTable').DataTable({
+        paging: false,
+        fixedColumns: { left: 1 },
+        colReorder: { enable: true },
+        fixedHeader: {
+          header: true,
+        },
+        dom: 'Qlfrtip',
+      });
+    });
+  </script>
+</Layout>

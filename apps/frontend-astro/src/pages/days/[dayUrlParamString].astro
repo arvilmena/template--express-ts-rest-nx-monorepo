@@ -1,0 +1,57 @@
+---
+import {
+  InferGetStaticParamsType,
+  InferGetStaticPropsType,
+  GetStaticPaths,
+} from 'astro';
+
+export const getStaticPaths = (async () => {
+  const days = await dayRepository.findAmount(365);
+  return days.map((d) => {
+    return {
+      params: { dayUrlParamString: luxonToManilaSqlFormat(d.dataAt) },
+      // props: { draft: post.data.draft, title: post.data.title },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+import { dayRepository, dailyCategoryRepository } from '@stonker/stonker';
+import Layout from '../../layouts/base/Layout.astro';
+import {
+  dayUrlParamStringToLuxon,
+  getCurrentManilaDate,
+  luxonToManilaSqlFormat,
+} from '@myawesomeorg/utils';
+import { dailyCategoryToHumanReadable } from '@myawesomeorg/db';
+const days = await dayRepository.findAmount(365);
+const now = getCurrentManilaDate();
+
+const { dayUrlParamString } = Astro.params;
+const categories = await dailyCategoryRepository.getAllMostParentByLuxonDate(
+  dayUrlParamStringToLuxon(dayUrlParamString),
+);
+---
+
+<Layout
+  title={`${dayUrlParamString}`}
+  breadcrumb={[
+    { title: 'Days', url: '/' },
+    { title: dayUrlParamString, url: `/days/${dayUrlParamString}` },
+  ]}
+>
+  {
+    categories.length > 0 && (
+      <ol>
+        {categories.map((c) => {
+          return (
+            <li>
+              <a href={`/days/${dayUrlParamString}/categories/${c.slug}`}>
+                {dailyCategoryToHumanReadable(c)}
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    )
+  }
+</Layout>
