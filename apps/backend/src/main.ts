@@ -3,7 +3,8 @@
  * This is only a minimal backend to get started.
  */
 import { myTsRestContract } from '@myawesomeorg/ts-rest';
-import { puppeteerService } from '@stonker/stonker';
+import { getCurrentManilaDate } from '@myawesomeorg/utils';
+import { crawler, puppeteerService } from '@stonker/stonker';
 import { ResponseValidationError } from '@ts-rest/core';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { generateOpenApi } from '@ts-rest/open-api';
@@ -66,14 +67,27 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 /**
  * Custom routes starts
  */
-app.get('/open-browser', async () => {
-  return await puppeteerService.openBrowser();
+app.get('/open-browser', () => {
+  puppeteerService.openBrowser();
+  return 'ok';
+});
+app.get('/start-daily-crawl', async () => {
+  return await crawler.startDailyCrawl();
 });
 /* Custom routes ends */
 
-const port = process.env.port || 3333;
-const server = app.listen(port, () => {
+const port = process.env.PORT || 4646;
+const server = app.listen(port, async () => {
   console.log(`Listening at http://localhost:${port}`);
+
+  const startupTime = getCurrentManilaDate();
+  if (parseInt(startupTime.luxon.toFormat('HH')) > 17) {
+    try {
+      return await crawler.startDailyCrawl();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 });
 server.on('error', console.error);
 

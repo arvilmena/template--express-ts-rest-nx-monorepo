@@ -26,7 +26,7 @@ export class SimplyWallStreetCrawlerService {
     // private readonly ROOT_FOLDER: string,
     private readonly dailyCrawlTypeRepository: DailyCrawlTypeRepository,
     private readonly emitter: EventEmitter2,
-    private readonly puppeteerService: PuppeteerService
+    private readonly puppeteerService: PuppeteerService,
   ) {}
 
   // getCookieFilePath(): string {
@@ -57,7 +57,7 @@ export class SimplyWallStreetCrawlerService {
     crawlType: string,
     specificCrawlType: string,
     errorToThrow: SwsCrawlPuppeteerTimedOutEvent,
-    scrollDelay = 1000
+    scrollDelay = 1000,
   ): Promise<SwsCrawlGridDataPerScroll[]> {
     // console.log(`> crawling Infinite Scroll...`);
     let items: SwsCrawlGridDataPerScroll[] = crawled;
@@ -66,7 +66,7 @@ export class SimplyWallStreetCrawlerService {
       while (items.length < itemCount) {
         await page.waitForTimeout(scrollDelay);
         currentHeight = parseFloat(
-          (await page.evaluate('document.body.scrollHeight')) as string
+          (await page.evaluate('document.body.scrollHeight')) as string,
         );
         // console.log(`>> currentHeight: ${currentHeight}`);
         await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
@@ -123,7 +123,7 @@ export class SimplyWallStreetCrawlerService {
           }
           for (const d of _result.data) {
             const existingItem = companiesOnly.find(
-              (i) => i.unique_symbol === d.unique_symbol
+              (i) => i.unique_symbol === d.unique_symbol,
             );
             if (!existingItem) {
               _companiesToPush.push(d);
@@ -148,18 +148,18 @@ export class SimplyWallStreetCrawlerService {
             .flat()
             .map((c) => c.unique_symbol);
           console.log(
-            `>>> companies: ${companiesCrawled.length}/${itemCount}...`
+            `>>> companies: ${companiesCrawled.length}/${itemCount}...`,
           );
         }
 
         await page.waitForFunction(
-          `document.body.scrollHeight > ${currentHeight}`
+          `document.body.scrollHeight > ${currentHeight}`,
         );
         await page.waitForTimeout(scrollDelay);
       }
     } catch (error) {
       console.log(
-        `> timeout trying to get more data... usually SWS doesn't complete the company list in the grid`
+        `> timeout trying to get more data... usually SWS doesn't complete the company list in the grid`,
       );
     }
     return items;
@@ -169,7 +169,7 @@ export class SimplyWallStreetCrawlerService {
     page: Page,
     crawlType: string,
     specificCrawlType: string,
-    errorToThrow: SwsCrawlPuppeteerTimedOutEvent
+    errorToThrow: SwsCrawlPuppeteerTimedOutEvent,
   ): Promise<SwsCrawlGridResultCompleteAndForFileSaving> {
     // await page.goto(url);
     let crawled: SwsCrawlGridDataPerScroll[] = [];
@@ -189,9 +189,10 @@ export class SimplyWallStreetCrawlerService {
     } catch (error) {
       this.emitter.emit(
         SWS_CRAWL_PUPPETEER_TIME_OUT,
-        errorToThrow satisfies SwsCrawlPuppeteerTimedOutEvent
+        errorToThrow satisfies SwsCrawlPuppeteerTimedOutEvent,
       );
       throw new SwsCrawlPuppeteerError(JSON.stringify(errorToThrow));
+      // return;
     }
     if (null === response) {
       throw new Error('Response is null');
@@ -236,7 +237,7 @@ export class SimplyWallStreetCrawlerService {
       _result.meta.total_records,
       crawlType,
       specificCrawlType,
-      errorToThrow
+      errorToThrow,
     );
 
     return {
@@ -340,10 +341,10 @@ export class SimplyWallStreetCrawlerService {
     // await page.waitForNavigation();
     await page.waitForSelector('#root h1');
     await page.waitForFunction(
-      `document.querySelectorAll('div[data-cy-id="scroll-pane"] table tbody tr[data-cy-id="stocks-table-row"]').length > 0`
+      `document.querySelectorAll('div[data-cy-id="scroll-pane"] table tbody tr[data-cy-id="stocks-table-row"]').length > 0`,
     );
     const dropdown = await page.waitForSelector(
-      'button[data-cy-id="stock-sorting"]'
+      'button[data-cy-id="stock-sorting"]',
     );
     if (!dropdown) {
       throw Error('Cannot find dropdown');
@@ -363,7 +364,7 @@ export class SimplyWallStreetCrawlerService {
           url: company.url,
           existingDailyCrawlTypeId:
             whatToCrawl?.whatToCrawl?.sws_company?.find(
-              (n) => n.specificCrawlType === company.specificCrawlType
+              (n) => n.specificCrawlType === company.specificCrawlType,
             )?.existingDailyCrawlTypeId ?? null,
         });
       }
@@ -373,7 +374,7 @@ export class SimplyWallStreetCrawlerService {
       if (
         'all' !== whatToCrawl &&
         !whatToCrawl.whatToCrawl.sws_stock_list?.find(
-          (n) => n.specificCrawlType === g.name
+          (n) => n.specificCrawlType === g.name,
         )
       ) {
         console.log(`> skipping ${g.name}...`);
@@ -383,7 +384,7 @@ export class SimplyWallStreetCrawlerService {
 
       try {
         const dropdown2 = await page.waitForSelector(
-          'button[data-cy-id="stock-sorting"]'
+          'button[data-cy-id="stock-sorting"]',
         );
         await page.waitForTimeout(1000);
         await dropdown2?.click();
@@ -396,32 +397,36 @@ export class SimplyWallStreetCrawlerService {
         //   'span[style="display: block;"] ul[data-cy-id="dropdown-list"] li'
         // );
         const menuItem = await page.$x(
-          `//ul[@data-cy-id="dropdown-list"]//li//a[contains(text(), "${g.dropdownName}")]`
+          `//ul[@data-cy-id="dropdown-list"]//li//a[contains(text(), "${g.dropdownName}")]`,
         );
         // console.log({ menuItem });
         (menuItem[0] as ElementHandle<Element>).click();
         await page.waitForFunction(
-          `window.location.pathname.includes("${g.urlIncludes}")`
+          `window.location.pathname.includes("${g.urlIncludes}")`,
         );
       } catch (error) {
         this.emitter.emit(
           SWS_CRAWL_PUPPETEER_TIME_OUT,
-          errorData satisfies SwsCrawlPuppeteerTimedOutEvent
+          errorData satisfies SwsCrawlPuppeteerTimedOutEvent,
         );
         throw new SwsCrawlPuppeteerError(JSON.stringify(errorData));
       }
-      const data = await this._crawlGrid(
-        page,
-        'sws_stock_list',
-        g.name,
-        errorData
-      );
+
+      let data: SwsCrawlGridResultCompleteAndForFileSaving | null = null;
+      try {
+        data = await this._crawlGrid(page, 'sws_stock_list', g.name, errorData);
+      } catch (error) {
+        console.log(
+          `_crawlGrid failed, should retry crawling automatically...`,
+        );
+        return;
+      }
 
       const existingDailyCrawlTypeId =
         whatToCrawl === 'all'
           ? null
           : whatToCrawl.whatToCrawl.sws_stock_list?.find(
-              (n) => n.specificCrawlType === g.name
+              (n) => n.specificCrawlType === g.name,
             )?.existingDailyCrawlTypeId ?? null;
 
       this.emitter.emit(SWS_CRAWL_GRID_RESULT_EVENT, {
@@ -444,14 +449,14 @@ export class SimplyWallStreetCrawlerService {
 
       const companiesCrawled = data.crawled.map((c) => c.companies).flat();
       console.log(
-        `> Crawled ${companiesCrawled.length}/${data.totalRecordsAsPerSimplyWallStreet} companies from ${g.name}.`
+        `> Crawled ${companiesCrawled.length}/${data.totalRecordsAsPerSimplyWallStreet} companies from ${g.name}.`,
       );
 
       if (g.shouldCrawlCompanyPages) {
         for (const company of companiesCrawled) {
           // check if this ticker symbol doesnt exist yet
           const companyPage = crawlLaterCompanyPages.find(
-            (c) => c.unique_symbol === company.unique_symbol
+            (c) => c.unique_symbol === company.unique_symbol,
           );
           if (!companyPage) {
             crawlLaterCompanyPages.push({
@@ -462,7 +467,7 @@ export class SimplyWallStreetCrawlerService {
                 whatToCrawl === 'all'
                   ? null
                   : whatToCrawl?.whatToCrawl?.sws_company?.find(
-                      (n) => n.specificCrawlType === company.unique_symbol
+                      (n) => n.specificCrawlType === company.unique_symbol,
                     )?.existingDailyCrawlTypeId ?? null,
             });
           }
@@ -474,7 +479,7 @@ export class SimplyWallStreetCrawlerService {
       if (
         'all' !== whatToCrawl &&
         !whatToCrawl.whatToCrawl.sws_screener?.find(
-          (n) => n.specificCrawlType === screener.name
+          (n) => n.specificCrawlType === screener.name,
         )
       ) {
         console.log(`> skipping ${screener.name}...`);
@@ -518,14 +523,14 @@ export class SimplyWallStreetCrawlerService {
         page,
         'sws_screener',
         screener.name,
-        errorData
+        errorData,
       );
 
       const existingDailyCrawlTypeId =
         whatToCrawl === 'all'
           ? null
           : whatToCrawl.whatToCrawl.sws_screener?.find(
-              (n) => n.specificCrawlType === screener.name
+              (n) => n.specificCrawlType === screener.name,
             )?.existingDailyCrawlTypeId ?? null;
 
       this.emitter.emit(SWS_CRAWL_GRID_RESULT_EVENT, {
@@ -548,14 +553,14 @@ export class SimplyWallStreetCrawlerService {
 
       const companiesCrawled = data.crawled.map((c) => c.companies).flat();
       console.log(
-        `> Crawled ${companiesCrawled.length}/${data.totalRecordsAsPerSimplyWallStreet} companies from ${screener.name}.`
+        `> Crawled ${companiesCrawled.length}/${data.totalRecordsAsPerSimplyWallStreet} companies from ${screener.name}.`,
       );
 
       if (screener.shouldCrawlCompanyPages) {
         for (const company of companiesCrawled) {
           // check if this ticker symbol doesnt exist yet
           const companyPage = crawlLaterCompanyPages.find(
-            (c) => c.unique_symbol === company.unique_symbol
+            (c) => c.unique_symbol === company.unique_symbol,
           );
           if (!companyPage) {
             crawlLaterCompanyPages.push({
@@ -566,7 +571,7 @@ export class SimplyWallStreetCrawlerService {
                 whatToCrawl === 'all'
                   ? null
                   : whatToCrawl?.whatToCrawl?.sws_company?.find(
-                      (n) => n.specificCrawlType === company.unique_symbol
+                      (n) => n.specificCrawlType === company.unique_symbol,
                     )?.existingDailyCrawlTypeId ?? null,
             });
           }
@@ -580,7 +585,7 @@ export class SimplyWallStreetCrawlerService {
           whatToCrawl === 'all'
             ? null
             : whatToCrawl.whatToCrawl.sws_company?.find(
-                (n) => n.specificCrawlType === c.unique_symbol
+                (n) => n.specificCrawlType === c.unique_symbol,
               )?.existingDailyCrawlTypeId ?? null;
         return {
           company: c,
@@ -589,7 +594,7 @@ export class SimplyWallStreetCrawlerService {
       });
     const newCrawlLaterCompanyPages =
       crawlLaterCompanyPagesWithDailyCrawlTypeId.filter(
-        (n) => n.existingDailyCrawlTypeId === null
+        (n) => n.existingDailyCrawlTypeId === null,
       );
 
     for (const c of newCrawlLaterCompanyPages) {
@@ -602,7 +607,7 @@ export class SimplyWallStreetCrawlerService {
       });
       if (_dailyCrawlType) {
         const _i = crawlLaterCompanyPagesWithDailyCrawlTypeId.findIndex(
-          (n) => n.company.unique_symbol === c.company.unique_symbol
+          (n) => n.company.unique_symbol === c.company.unique_symbol,
         );
         crawlLaterCompanyPagesWithDailyCrawlTypeId[
           _i
@@ -634,16 +639,16 @@ export class SimplyWallStreetCrawlerService {
     if (whatToCrawl !== 'all' && whatToCrawl.dailyCrawl?.id) {
       const swsCompaniesInDb =
         await this.dailyCrawlTypeRepository.findAllUnfinishedSwsCompaniesByDailyCrawlId(
-          whatToCrawl.dailyCrawl.id
+          whatToCrawl.dailyCrawl.id,
         );
 
       const haveNoDbEntry = crawlLaterCompanyPages.filter(
-        (n) => n.existingDailyCrawlTypeId === null
+        (n) => n.existingDailyCrawlTypeId === null,
       );
 
       for (const c of haveNoDbEntry) {
         const _alrInDb = swsCompaniesInDb.find(
-          (n) => n.crawlTypeSpecific === c.unique_symbol
+          (n) => n.crawlTypeSpecific === c.unique_symbol,
         );
         if (_alrInDb && _alrInDb.id) {
           c.existingDailyCrawlTypeId = _alrInDb.id;
@@ -677,7 +682,7 @@ export class SimplyWallStreetCrawlerService {
         };
         this.emitter.emit(
           SWS_CRAWL_PUPPETEER_TIME_OUT,
-          errorData satisfies SwsCrawlPuppeteerTimedOutEvent
+          errorData satisfies SwsCrawlPuppeteerTimedOutEvent,
         );
         throw new SwsCrawlPuppeteerError(JSON.stringify(errorData));
       }
@@ -695,7 +700,7 @@ export class SimplyWallStreetCrawlerService {
           requestPayload,
         },
         companyPage: crawlLaterCompanyPagesWithDailyCrawlTypeId.find(
-          (n) => n.company.unique_symbol === c.unique_symbol
+          (n) => n.company.unique_symbol === c.unique_symbol,
         ) as (typeof crawlLaterCompanyPagesWithDailyCrawlTypeId)[number],
         crawledAtManilaTime: getCurrentManilaDate(),
         dailyCrawl:

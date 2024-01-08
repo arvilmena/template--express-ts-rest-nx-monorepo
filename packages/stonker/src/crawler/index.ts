@@ -27,7 +27,7 @@ export class StonkerCrawler {
     private readonly dayRepository: DayRepository,
     private readonly dailyCrawlTypeRepository: DailyCrawlTypeRepository,
     private readonly dailyCrawlRepository: DailyCrawlRepository,
-    private readonly simplyWallStreetCrawlerService: SimplyWallStreetCrawlerService
+    private readonly simplyWallStreetCrawlerService: SimplyWallStreetCrawlerService,
   ) {}
 
   async startDailyCrawl() {
@@ -36,16 +36,14 @@ export class StonkerCrawler {
     const dayLuxon = manilaLuxonDateToCrawlDataAtFormat(now.luxon);
 
     const yesterday = dayLuxon.minus({ days: 1 });
-    const yesterdayCrawl = await this.dailyCrawlRepository.findByLuxonDate(
-      yesterday
-    );
+    const yesterdayCrawl =
+      await this.dailyCrawlRepository.findByLuxonDate(yesterday);
 
     let todayCrawl = await this.dailyCrawlRepository.findByLuxonDate(dayLuxon);
 
     if (!todayCrawl) {
-      const _newDailyCrawl = await this.dailyCrawlRepository.getByLuxon(
-        dayLuxon
-      );
+      const _newDailyCrawl =
+        await this.dailyCrawlRepository.getByLuxon(dayLuxon);
 
       const todayCrawlId = _newDailyCrawl?.id ?? null;
       if (todayCrawlId)
@@ -58,10 +56,10 @@ export class StonkerCrawler {
 
     // check if all crawlTypes are populated
     const existingCrawlTypes = todayCrawl.dailyCrawlTypes.map(
-      (n) => n.crawlType
+      (n) => n.crawlType,
     );
     const toBeCreatedCrawlTypes = CRAWL_TYPES.filter(
-      (n) => !existingCrawlTypes.includes(n)
+      (n) => !existingCrawlTypes.includes(n),
     );
 
     for (const crawlType of toBeCreatedCrawlTypes) {
@@ -96,12 +94,12 @@ export class StonkerCrawler {
 
     // unfinishedCrawlTypes
     const unfinishedCrawlTypes = todayCrawl.dailyCrawlTypes.filter(
-      (n) => !n.dataId
+      (n) => !n.dataId,
     );
 
     if (unfinishedCrawlTypes.length === 0) {
       return `All crawls for today ${now.luxon.toFormat(
-        'yyyy-MM-dd'
+        'yyyy-MM-dd',
       )} has been completed`;
     }
 
@@ -145,12 +143,12 @@ export class StonkerCrawler {
       try {
         await this.simplyWallStreetCrawlerService.crawl(whatToCrawl);
       } catch (error) {
-        console.log({ error });
+        console.error({ error });
         if (error instanceof SwsCrawlPuppeteerError) {
           console.log({ error });
-          throw new Error(
-            'SwsCrawlPuppeteerError error! will attempt to recrawl'
-          );
+          console.log('SwsCrawlPuppeteerError error! will attempt to recrawl');
+
+          return { yesterdayCrawl: yesterdayCrawl ?? null, todayCrawl };
         }
         throw new Error('Error crawling');
       }
