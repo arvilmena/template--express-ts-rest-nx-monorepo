@@ -32,7 +32,7 @@ interface CanSaveSwsCrawlData {
 export class DailyCrawlSwsDataFileSystem implements CanSaveSwsCrawlData {
   constructor(
     private readonly luxonDataAt: DateTime,
-    private readonly dailyCrawlFileStorage: FileStorage
+    private readonly dailyCrawlFileStorage: FileStorage,
   ) {}
   async saveSwsCrawlData({
     crawlType,
@@ -46,12 +46,12 @@ export class DailyCrawlSwsDataFileSystem implements CanSaveSwsCrawlData {
       luxonToManilaSqlFormat(this.luxonDataAt),
       'simply-wall-street',
       crawlType,
-      `${fileName}.json`
+      `${fileName}.json`,
     );
 
     return await this.dailyCrawlFileStorage.write(
       destination,
-      JSON.stringify(data, null, 2)
+      JSON.stringify(data, null, 2),
     );
   }
 }
@@ -60,21 +60,25 @@ export class DailyCrawlFileSystem {
   private _dailyCrawlFileStorage: FileStorage;
   private _dailyCrawlDirectory: string;
 
+  public get dailyCrawlFileStorage(): FileStorage {
+    return this._dailyCrawlFileStorage;
+  }
+
   constructor(localRootDirectoryAbsPath: string) {
     this._dailyCrawlDirectory = path.join(
       localRootDirectoryAbsPath,
       'data',
-      'daily-crawl'
+      'daily-crawl',
     );
     this._dailyCrawlFileStorage = new FileStorage(
-      new LocalStorageAdapter(this._dailyCrawlDirectory)
+      new LocalStorageAdapter(this._dailyCrawlDirectory),
     );
   }
 
   createDailyCrawlSwsDataFileSystem(luxonDataAt: DateTime) {
     return new DailyCrawlSwsDataFileSystem(
       luxonDataAt,
-      this._dailyCrawlFileStorage
+      this._dailyCrawlFileStorage,
     );
   }
 }

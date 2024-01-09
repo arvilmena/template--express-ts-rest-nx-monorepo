@@ -43,6 +43,13 @@
       "when": 1703606665085,
       "tag": "0005_chemical_old_lace",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1704827966218,
+      "tag": "0006_talented_white_tiger",
+      "breakpoints": true
     }
   ]
 }

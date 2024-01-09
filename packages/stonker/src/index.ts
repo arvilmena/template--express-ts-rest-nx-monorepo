@@ -7,6 +7,7 @@ import {
   CrawlDataSwsCompanyCategoryRepository,
   CrawlDataSwsCompanyFreeCashFlowRepository,
   CrawlDataSwsCompanyRepository,
+  CrawlDataSwsCompanyStatementPivotRepository,
   CrawlDataSwsScreenerRepository,
   CrawlDataSwsScreenerResultRepository,
   CrawlDataSwsStockListRepository,
@@ -16,11 +17,13 @@ import {
   DailyCrawlRepository,
   DailyCrawlTypeRepository,
   DayRepository,
+  SwsCompanyStatementRepository,
 } from '@myawesomeorg/db';
-import { FileSystem } from '@myawesomeorg/file-system';
+import { DailyCrawlFileSystem, FileSystem } from '@myawesomeorg/file-system';
 import EventEmitter2 from 'eventemitter2';
 import { StonkerCrawler } from './crawler/index';
 import { PuppeteerService } from './crawler/puppeteer/puppeteer.service';
+import { SimplyWallStreetCompanyPageDataService } from './crawler/simply-wall-street/services/simply-wall-street-company-page-data.service';
 import { SimplyWallStreetCrawlerService } from './crawler/simply-wall-street/services/simply-wall-street-crawler.service';
 import { StonkerEvents } from './events/sws-crawl-events';
 
@@ -66,6 +69,10 @@ const crawlDataSwsCompanyCategoryRepository =
     dayRepository,
     dailyCategoryRepository,
   );
+const swsCompanyStatementRepository = new SwsCompanyStatementRepository();
+const crawlDataSwsCompanyStatementPivotRepository =
+  new CrawlDataSwsCompanyStatementPivotRepository();
+
 const eventEmitter = new EventEmitter2(eventEmitterConfig);
 const fileSystem = new FileSystem(StonkerConfig.APP_ROOT_DIR_ABSPATH);
 const puppeteerService = new PuppeteerService(fileSystem);
@@ -96,18 +103,32 @@ new StonkerEvents(
   crawler,
 );
 
+const dailyCrawlFiles = new DailyCrawlFileSystem(
+  StonkerConfig.APP_ROOT_DIR_ABSPATH,
+);
+
+const swsCompanyPageDataService = new SimplyWallStreetCompanyPageDataService(
+  crawlDataSwsCompanyRepository,
+  swsCompanyStatementRepository,
+  crawlDataSwsCompanyStatementPivotRepository,
+);
+
 export {
   crawlDataSwsCompanyCategoryRepository,
   crawlDataSwsCompanyFreeCashFlowRepository,
   crawlDataSwsCompanyRepository,
+  crawlDataSwsCompanyStatementPivotRepository,
   crawlDataSwsScreenerRepository,
   crawlDataSwsScreenerResultRepository,
   crawlDataSwsStockListRepository,
   crawlDataSwsStockListResultRepository,
   crawler,
   dailyCategoryRepository,
+  dailyCrawlFiles,
   dailyCrawlRepository,
   dailyCrawlTypeRepository,
   dayRepository,
   puppeteerService,
+  swsCompanyPageDataService,
+  swsCompanyStatementRepository,
 };

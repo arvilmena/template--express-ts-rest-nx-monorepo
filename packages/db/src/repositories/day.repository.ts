@@ -3,8 +3,8 @@ import { desc, eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import { DateTime } from 'luxon';
 import { z } from 'zod';
+import { FixAnnoyingDrizzleZodBug } from '../drizzle/utils/_helper';
 import { day, db } from './../index';
-import { FixAnnoyingDrizzleZodBug } from './_helper';
 export const insertDaySchema = createInsertSchema(day);
 
 export class DayRepository {

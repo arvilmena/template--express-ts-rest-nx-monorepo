@@ -1,4 +1,4 @@
-import { CRAWL_TYPES } from '@myawesomeorg/constants';
+// import { CRAWL_TYPES } from '@myawesomeorg/constants';
 import { relations } from 'drizzle-orm';
 import {
   blob,
@@ -19,6 +19,8 @@ export const dailyCrawl = sqliteTable('daily_crawl', {
   finishedAt: luxonDateTime('finished_at'),
 });
 
+const CRAWL_TYPES = ['sws_stock_list', 'sws_screener', 'sws_company'] as const;
+
 export const dailyCrawlType = sqliteTable(
   'daily_crawl_type',
   {
@@ -38,10 +40,10 @@ export const dailyCrawlType = sqliteTable(
       unq: unique('daily_crawl_and_crawl_type').on(
         table.dailyCrawlId,
         table.crawlType,
-        table.crawlTypeSpecific
+        table.crawlTypeSpecific,
       ),
     };
-  }
+  },
 );
 
 export const dailyCrawlRelations = relations(dailyCrawl, ({ many, one }) => ({
@@ -79,10 +81,10 @@ export const crawlDataSwsStockList = sqliteTable(
     return {
       unq: unique('crawl_data_sws_stock_list_data_at_and_crawl_type').on(
         table.crawledAt,
-        table.crawlTypeSpecific
+        table.crawlTypeSpecific,
       ),
     };
-  }
+  },
 );
 
 export const crawlDataSwsStockListResult = sqliteTable(
@@ -102,10 +104,10 @@ export const crawlDataSwsStockListResult = sqliteTable(
     return {
       unq: unique('stock_list_and_position').on(
         table.crawlDataSwsStockListId,
-        table.position
+        table.position,
       ),
     };
-  }
+  },
 );
 
 export const crawlDataSwsScreener = sqliteTable(
@@ -124,10 +126,10 @@ export const crawlDataSwsScreener = sqliteTable(
     return {
       unq: unique('crawl_data_sws_screener_data_at_and_crawl_type').on(
         table.crawledAt,
-        table.crawlTypeSpecific
+        table.crawlTypeSpecific,
       ),
     };
-  }
+  },
 );
 
 export const crawlDataSwsScreenerResult = sqliteTable(
@@ -145,10 +147,10 @@ export const crawlDataSwsScreenerResult = sqliteTable(
     return {
       unq: unique('screener_and_position').on(
         table.crawlDataSwsScreenerId,
-        table.position
+        table.position,
       ),
     };
-  }
+  },
 );
 
 export const crawlDataSwsCompany = sqliteTable(
@@ -190,7 +192,7 @@ export const crawlDataSwsCompany = sqliteTable(
 
     peerPreferredComparison: text('peer_preferred_multiple'),
     peerPreferredValue: real(
-      'peer_preferred_relative_multiple_average_peer_value'
+      'peer_preferred_relative_multiple_average_peer_value',
     ),
 
     intrinsicValue: real('intrinsic_value'),
@@ -205,7 +207,7 @@ export const crawlDataSwsCompany = sqliteTable(
     dividendCashPayoutRatio: real('dividend_cash_payout_ratio'),
 
     leveredFreeCashFlowAnnualGrowth: real(
-      'health_levered_free_cash_flow_growth_annual'
+      'health_levered_free_cash_flow_growth_annual',
     ),
   },
   (table) => {
@@ -213,10 +215,10 @@ export const crawlDataSwsCompany = sqliteTable(
       unq: unique('crawled_at_and_sws_id').on(table.crawledAt, table.swsId),
       unq2: unique('sws_id_and_sws_data_last_updated').on(
         table.swsId,
-        table.swsDataLastUpdated
+        table.swsDataLastUpdated,
       ),
     };
-  }
+  },
 );
 
 export const crawlDataSwsCompanyRelations = relations(
@@ -224,7 +226,7 @@ export const crawlDataSwsCompanyRelations = relations(
   ({ many }) => ({
     freeCashFlows: many(crawlDataSwsCompanyFreeCashFlow),
     categories: many(crawlDataSwsCompanyCategory),
-  })
+  }),
 );
 
 export const crawlDataSwsCompanyCategory = sqliteTable(
@@ -246,10 +248,10 @@ export const crawlDataSwsCompanyCategory = sqliteTable(
     return {
       unq: unique('crawl_data_sws_company_category_company_and_category').on(
         table.crawlDataSwsCompanyId,
-        table.dailyCategoryId
+        table.dailyCategoryId,
       ),
     };
-  }
+  },
 );
 
 export const crawlDataSwsCompanyCategoryRelations = relations(
@@ -263,7 +265,7 @@ export const crawlDataSwsCompanyCategoryRelations = relations(
       fields: [crawlDataSwsCompanyCategory.dailyCategoryId],
       references: [dailyCategory.id],
     }),
-  })
+  }),
 );
 
 export const crawlDataSwsCompanyFreeCashFlow = sqliteTable(
@@ -279,7 +281,7 @@ export const crawlDataSwsCompanyFreeCashFlow = sqliteTable(
     return {
       unq: unique('data_at_and_sws_id').on(table.dataAt, table.swsId),
     };
-  }
+  },
 );
 
 export const crawlDataSwsCompanyFreeCashFlowRelations = relations(
@@ -289,7 +291,7 @@ export const crawlDataSwsCompanyFreeCashFlowRelations = relations(
       fields: [crawlDataSwsCompanyFreeCashFlow.swsId],
       references: [crawlDataSwsCompany.id],
     }),
-  })
+  }),
 );
 
 export const day = sqliteTable('day', {
@@ -313,6 +315,7 @@ export const dailyCategory = sqliteTable(
     source: text('source', {
       enum: ['sws', 'pse', 'investa'],
     }).notNull(),
+    swsSubTypeId: text('sws_sub_type_id'),
     name: text('name').notNull(),
     slug: text('slug').notNull(),
     isMostParent: integer('is_most_parent', { mode: 'boolean' }).notNull(),
@@ -323,12 +326,13 @@ export const dailyCategory = sqliteTable(
       unq: unique('daily_category_data_at_source_and_name').on(
         table.dataAt,
         table.source,
-        table.name
+        table.name,
       ),
       unq2: unique('daily_category_data_at_slug').on(table.dataAt, table.slug),
     };
-  }
+  },
 );
+
 export const dailyCategoryRelations = relations(
   dailyCategory,
   ({ one, many }) => ({
@@ -339,7 +343,7 @@ export const dailyCategoryRelations = relations(
     dailyCategoryParents: many(dailyCategoryParent, {
       relationName: 'dailyCategory',
     }),
-  })
+  }),
 );
 
 export const dailyCategoryParent = sqliteTable(
@@ -357,10 +361,10 @@ export const dailyCategoryParent = sqliteTable(
     return {
       unq: unique('daily_category_parent_category_and_parent').on(
         table.dailyCategoryId,
-        table.parentId
+        table.parentId,
       ),
     };
-  }
+  },
 );
 
 export const dailyCategoryParentRelations = relations(
@@ -376,5 +380,45 @@ export const dailyCategoryParentRelations = relations(
       references: [dailyCategory.id],
       relationName: 'parentCategory',
     }),
-  })
+  }),
+);
+
+export const swsCompanyStatement = sqliteTable(
+  'sws_company_statement',
+  {
+    id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+    key: text('statement_name').notNull(),
+    description: text('description').notNull(),
+    effectType: text('type').notNull(),
+  },
+  (table) => {
+    return {
+      unq: unique('sws_company_statement_key_description_and_type').on(
+        table.key,
+        table.description,
+        table.effectType,
+      ),
+    };
+  },
+);
+
+export const crawlDataSwsCompanyStatement = sqliteTable(
+  'crawl_data_sws_company_statement',
+  {
+    id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+    statementId: integer('sws_company_statement_id', {
+      mode: 'number',
+    }).references(() => swsCompanyStatement.id, { onDelete: 'cascade' }),
+    crawlDataSwsCompanyId: integer('crawl_data_sws_company_id', {
+      mode: 'number',
+    }).references(() => crawlDataSwsCompany.id, { onDelete: 'cascade' }),
+  },
+  (table) => {
+    return {
+      unq: unique('crawl_data_sws_company_statement_unique').on(
+        table.statementId,
+        table.crawlDataSwsCompanyId,
+      ),
+    };
+  },
 );

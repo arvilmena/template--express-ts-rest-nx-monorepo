@@ -1,7 +1,7 @@
 import { customType } from 'drizzle-orm/sqlite-core';
 
-import { dbDateStringToLuxon } from '@myawesomeorg/utils';
 import { DateTime } from 'luxon';
+import { dbDateStringToLuxon } from '../utils/db-date-string-to-luxon';
 export const luxonDateTime = customType<{
   data: DateTime;
   driverData: string;

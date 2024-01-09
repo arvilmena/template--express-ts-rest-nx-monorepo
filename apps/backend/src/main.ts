@@ -3,8 +3,15 @@
  * This is only a minimal backend to get started.
  */
 import { myTsRestContract } from '@myawesomeorg/ts-rest';
-import { getCurrentManilaDate } from '@myawesomeorg/utils';
-import { crawler, puppeteerService } from '@stonker/stonker';
+import {
+  dayUrlParamStringToLuxon,
+  getCurrentManilaDate,
+} from '@myawesomeorg/utils';
+import {
+  crawler,
+  puppeteerService,
+  swsCompanyPageDataService,
+} from '@stonker/stonker';
 import { ResponseValidationError } from '@ts-rest/core';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { generateOpenApi } from '@ts-rest/open-api';
@@ -67,13 +74,28 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 /**
  * Custom routes starts
  */
-app.get('/open-browser', () => {
+app.get('/open-browser', (_req: Request, res: Response) => {
   puppeteerService.openBrowser();
-  return 'ok';
+  res.json({ result: 'ok' });
 });
-app.get('/start-daily-crawl', async () => {
-  return await crawler.startDailyCrawl();
+app.get('/start-daily-crawl', async (_req: Request, res: Response) => {
+  const d = await crawler.startDailyCrawl();
+  res.json(d);
 });
+app.get(
+  '/recrawl-sws-company-page-data-from-file',
+  async (req: Request, res: Response) => {
+    // return await swsCompanyPageDataService.recrawlCompanyPageDataFromFile();
+    const { day, uniqueSymbol } = req.body;
+    const dataAt = dayUrlParamStringToLuxon(day);
+    const result =
+      await swsCompanyPageDataService.recrawlCompanyPageDataFromFile(
+        dataAt,
+        uniqueSymbol,
+      );
+    res.json(result);
+  },
+);
 /* Custom routes ends */
 
 const port = process.env.PORT || 4646;
@@ -81,7 +103,7 @@ const server = app.listen(port, async () => {
   console.log(`Listening at http://localhost:${port}`);
 
   const startupTime = getCurrentManilaDate();
-  if (parseInt(startupTime.luxon.toFormat('HH')) > 17) {
+  if (parseInt(startupTime.luxon.toFormat('HH')) >= 17) {
     try {
       return await crawler.startDailyCrawl();
     } catch (error) {

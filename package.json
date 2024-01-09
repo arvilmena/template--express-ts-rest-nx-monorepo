@@ -5,7 +5,10 @@
   "scripts": {
     "dev:backend": "pnpm exec nx run backend:serve:development",
     "lint": "pnpm exec nx run-many -t lint",
-    "dev:frontend": "pnpm exec nx run frontend-astro:dev"
+    "dev:frontend": "pnpm exec nx run frontend-astro:dev",
+    "db:generate": "drizzle-kit generate:sqlite",
+    "db:studio": "drizzle-kit studio --verbose",
+    "db:push": "drizzle-kit push:sqlite"
   },
   "private": true,
   "dependencies": {
@@ -54,6 +57,7 @@
     "@swc/cli": "~0.1.62",
     "@swc/core": "~1.3.85",
     "@swc/jest": "0.2.20",
+    "@total-typescript/ts-reset": "^0.5.1",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
     "@types/express": "~4.17.13",
@@ -76,7 +80,6 @@
     "prettier-plugin-astro": "^0.12.3",
     "react-refresh": "^0.10.0",
     "ts-jest": "^29.1.0",
-    "ts-node": "10.9.1",
     "typescript": "~5.2.2",
     "url-loader": "^4.1.1",
     "verdaccio": "^5.0.4"

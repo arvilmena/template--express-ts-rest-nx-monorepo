@@ -1,4 +1,3 @@
-import { StonkerConfig } from '@myawesomeorg/config';
 import {
   SWS_CRAWL_COMPANY_PAGE_DATA_CRAWLED_EVENT,
   SWS_CRAWL_GRID_RESULT_EVENT,
@@ -25,7 +24,6 @@ import {
   InsertCrawlDataSwsCompanySchemaType,
   SwsStockListCrawlTypeSpecificType,
 } from '@myawesomeorg/db';
-import { DailyCrawlFileSystem } from '@myawesomeorg/file-system';
 import {
   getProcessDetails,
   killPidProcess,
@@ -33,11 +31,8 @@ import {
 } from '@myawesomeorg/utils';
 import { EventEmitter2 } from 'eventemitter2';
 import { DateTime } from 'luxon';
+import { dailyCrawlFiles } from '..';
 import { StonkerCrawler } from '../crawler';
-
-const dailyCrawlFiles = new DailyCrawlFileSystem(
-  StonkerConfig.APP_ROOT_DIR_ABSPATH,
-);
 
 export class StonkerEvents {
   constructor(

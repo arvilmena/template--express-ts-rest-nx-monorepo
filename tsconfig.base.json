@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
+    "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
     "sourceMap": true,
@@ -25,7 +26,8 @@
       "@myawesomeorg/ts-rest": ["packages/ts-rest/src/index.ts"],
       "@myawesomeorg/utils": ["packages/utils/src/index.ts"],
       "@stonker/stonker": ["packages/stonker/src/index.ts"]
-    }
+    },
+    "types": ["@total-typescript/ts-reset"]
   },
   "exclude": ["node_modules", "tmp"]
 }

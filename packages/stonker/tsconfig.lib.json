@@ -3,9 +3,11 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "types": ["node"],
+    "types": ["node", "@total-typescript/ts-reset"],
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true // puppeteer-extra-plugin-stealth
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "./reset.d.ts"],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

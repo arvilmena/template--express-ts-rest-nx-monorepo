@@ -12,24 +12,24 @@ export class PuppeteerCookie {
       localRootDirectoryAbsPath,
       'data',
       'puppeteer',
-      'cookies'
+      'cookies',
     );
     this._puppeteerCookieStorage = new FileStorage(
-      new LocalStorageAdapter(this._puppeteerCookieDirectory)
+      new LocalStorageAdapter(this._puppeteerCookieDirectory),
     );
   }
 
   async getCookie(): Promise<Protocol.Network.CookieParam[]> {
     const contents = await this._puppeteerCookieStorage.readToString(
-      this._cookieFileName
+      this._cookieFileName,
     );
-    return JSON.parse(contents);
+    return JSON.parse(contents) as Protocol.Network.CookieParam[];
   }
 
   async replaceCookie(cookies: Protocol.Network.Cookie[]) {
     await this._puppeteerCookieStorage.write(
       this._cookieFileName,
-      JSON.stringify(cookies, null, 2)
+      JSON.stringify(cookies, null, 2),
     );
   }
 }

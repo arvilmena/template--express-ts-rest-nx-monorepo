@@ -1,11 +1,11 @@
 import { createInsertSchema } from 'drizzle-zod';
 import { DateTime } from 'luxon';
 import { z } from 'zod';
+import { FixAnnoyingDrizzleZodBug } from '../drizzle/utils/_helper';
 import { crawlDataSwsStockList, db } from './../index';
-import { FixAnnoyingDrizzleZodBug } from './_helper';
 
 export const insertCrawlDataSwsStockListSchema = createInsertSchema(
-  crawlDataSwsStockList
+  crawlDataSwsStockList,
 );
 
 export type SwsStockListCrawlTypeSpecificType = z.infer<

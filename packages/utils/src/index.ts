@@ -2,7 +2,6 @@ export * from './crawl-functions/get-pid-process-details';
 export * from './crawl-functions/kill-pid-process';
 export * from './crawl-functions/process-arg0-is-puppeteer';
 export * from './date-functions/day-url-param-string-to-luxon';
-export * from './date-functions/db-date-string-to-luxon';
 export * from './date-functions/get-current-manila-time';
 export * from './date-functions/luxon-to-db-format';
 export * from './date-functions/luxon-to-manila-sql-format';

@@ -2,12 +2,12 @@ import { SwsCrawlCompanyPageData } from '@myawesomeorg/constants';
 import { and, eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
+import { FixAnnoyingDrizzleZodBug } from '../drizzle/utils/_helper';
 import {
   crawlDataSwsCompany,
   crawlDataSwsCompanyCategory,
   db,
 } from './../index';
-import { FixAnnoyingDrizzleZodBug } from './_helper';
 
 export const insertCrawlDataSwsCompanySchema =
   createInsertSchema(crawlDataSwsCompany);
@@ -22,10 +22,10 @@ export class CrawlDataSwsCompanyRepository {
         and(
           eq(
             crawlDataSwsCompany.id,
-            crawlDataSwsCompanyCategory.crawlDataSwsCompanyId
+            crawlDataSwsCompanyCategory.crawlDataSwsCompanyId,
           ),
-          eq(crawlDataSwsCompanyCategory.dailyCategoryId, categoryId)
-        )
+          eq(crawlDataSwsCompanyCategory.dailyCategoryId, categoryId),
+        ),
       );
   }
   async findBySwsIdAndLastUpdated({
@@ -39,7 +39,7 @@ export class CrawlDataSwsCompanyRepository {
       where: (crawlDataSwsCompany, { eq, and }) =>
         and(
           eq(crawlDataSwsCompany.swsId, swsId),
-          eq(crawlDataSwsCompany.swsDataLastUpdated, swsDataLastUpdated)
+          eq(crawlDataSwsCompany.swsDataLastUpdated, swsDataLastUpdated),
         ),
     });
   }

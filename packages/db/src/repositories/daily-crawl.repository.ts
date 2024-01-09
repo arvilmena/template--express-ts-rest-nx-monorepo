@@ -3,8 +3,8 @@ import { asc, eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import { DateTime } from 'luxon';
 import { z } from 'zod';
+import { FixAnnoyingDrizzleZodBug } from '../drizzle/utils/_helper';
 import { DayRepository, dailyCrawl, dailyCrawlType, db } from './../index';
-import { FixAnnoyingDrizzleZodBug } from './_helper';
 
 export const insertDailyCrawlSchema = createInsertSchema(dailyCrawl);
 
@@ -45,7 +45,7 @@ export class DailyCrawlRepository {
     const day = await this.dayRepository.getByLuxon(correctDateFormat);
     if (!day) {
       throw new Error(
-        `Day entry for ${luxon.toISO()} -> ${correctDateFormat.toISO()} cant be created nor fetched`
+        `Day entry for ${luxon.toISO()} -> ${correctDateFormat.toISO()} cant be created nor fetched`,
       );
     }
     const data: FixAnnoyingDrizzleZodBug<
@@ -72,7 +72,7 @@ export class DailyCrawlRepository {
 
   async markCompletedIfAllCrawlTypesAreCompleted(
     dailyCrawlId: number,
-    luxon: DateTime
+    luxon: DateTime,
   ) {
     const f = await this.findById(dailyCrawlId);
     if (!f) {

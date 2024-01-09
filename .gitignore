@@ -45,7 +45,8 @@ Thumbs.db
 /.cache
 
 # ENV
-/.env.local
+/.env
+/.env.*
 
 # Data
 /data

@@ -23,32 +23,10 @@ import { ElementHandle, HTTPResponse, Page } from 'puppeteer';
 import { PuppeteerService } from '../../puppeteer/puppeteer.service';
 export class SimplyWallStreetCrawlerService {
   constructor(
-    // private readonly ROOT_FOLDER: string,
     private readonly dailyCrawlTypeRepository: DailyCrawlTypeRepository,
     private readonly emitter: EventEmitter2,
     private readonly puppeteerService: PuppeteerService,
   ) {}
-
-  // getCookieFilePath(): string {
-  //   return path.join(
-  //     this.ROOT_FOLDER,
-  //     "data",
-  //     "puppeteer",
-  //     "cookies",
-  //     "cookies.json"
-  //   );
-  // }
-
-  // async getCookie(): Promise<Protocol.Network.CookieParam[]> {
-  //   return this.fileSystem.puppeteerCookie.getCookie();
-  // }
-
-  // async saveCurrentCookies(cdt: CDPSession) {
-  //   // console.log(`> saving cookies...`);
-  //   return this.fileSystem.puppeteerCookie.replaceCookie(
-  //     (await cdt.send("Network.getAllCookies")).cookies
-  //   );
-  // }
 
   async _scrapeInfiniteScrollGrid(
     page: Page,
@@ -68,31 +46,9 @@ export class SimplyWallStreetCrawlerService {
         currentHeight = parseFloat(
           (await page.evaluate('document.body.scrollHeight')) as string,
         );
-        // console.log(`>> currentHeight: ${currentHeight}`);
         await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
-        // const newHeight = parseFloat(
-        //   (await page.evaluate("document.body.scrollHeight")) as string
-        // );
-        // console.log(`>> newHeight: ${newHeight}`);
 
         let response: HTTPResponse | null = null;
-        // try {
-        //   const _r = await Promise.all([
-        //     page.waitForResponse(async (response) => {
-        //       const shouldWait =
-        //         response.url().includes("/api/grid/filter") &&
-        //         response.request().postData()?.includes('"ph');
-        //       return Boolean(shouldWait);
-        //     }),
-        //   ]);
-        //   response = _r[0];
-        // } catch (error) {
-        //   this.emitter.emit(
-        //     SWS_CRAWL_PUPPETEER_TIME_OUT,
-        //     errorToThrow satisfies SwsCrawlPuppeteerTimedOutEvent
-        //   );
-        //   throw new SwsCrawlPuppeteerError(JSON.stringify(errorToThrow));
-        // }
         const _r = await Promise.all([
           page.waitForResponse(async (response) => {
             const shouldWait =
@@ -246,70 +202,8 @@ export class SimplyWallStreetCrawlerService {
     } satisfies SwsCrawlGridResultCompleteAndForFileSaving;
   }
 
-  // async _writeToFile(contents: any, dest: string) {
-  //   const _contents =
-  //     typeof contents === "string"
-  //       ? contents
-  //       : JSON.stringify(contents, null, 2);
-
-  //   // create path recursively
-  //   await fs.promises.mkdir(path.parse(dest).dir, { recursive: true });
-  //   return await Bun.write(dest, _contents);
-  // }
-
   async crawl(whatToCrawl: SwsCrawlWhatToCrawlParamsType = 'all') {
     console.log(`> Crawling Simply Wall Street...`);
-    // console.log(
-    //   `>> whatToCrawl: ${
-    //     whatToCrawl !== "all" ? JSON.stringify(whatToCrawl, null, 2) : "all"
-    //   }`
-    // );
-    // let browser;
-    // puppeteer.use(StealthPlugin());
-
-    // // Add Adblocker plugin to block all ads and trackers (saves bandwidth)
-    // puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
-
-    // try {
-    //   browser = await puppeteer.launch({
-    //     headless: false,
-    //     // defaultViewport: { width: 1920, height: 1080 },
-    //     defaultViewport: null,
-    //     userDataDir: this.fileSystem.puppeteerUserDataDir,
-    //     ignoreDefaultArgs: ["--enable-automation"],
-    //     args: [
-    //       "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-    //       "--disable-infobars",
-    //       "--start-maximized",
-    //       "--single-process",
-    //       "--no-zygote",
-    //       "--no-sandbox",
-    //     ],
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
-    // if (!browser) {
-    //   throw Error("Cannot open browser");
-    // }
-
-    // const browserPid = browser.process()?.pid ?? null;
-    // if (!browserPid) {
-    //   throw Error("Cannot get browser pid");
-    // }
-    // console.log(`current browser pid: ${browserPid}...`);
-    // const processDetails = await getProcessDetails(browserPid);
-    // const browserProcess: PuppeteerBrowserProcess = {
-    //   pid: processDetails.pid,
-    //   browserCommand: processDetails.command,
-    //   arg0: processDetails.arg0,
-    // };
-    // if (processArg0IsPuppeteer(browserProcess.arg0) === false) {
-    //   throw new Error(
-    //     `Browser process ${browserProcess.arg0} doesnt look to be chrome`
-    //   );
-    // }
 
     const { browser, browserProcess, cdt } =
       await this.puppeteerService.openBrowser();
@@ -320,25 +214,9 @@ export class SimplyWallStreetCrawlerService {
     };
 
     const page = await browser.newPage();
-    // await page.setCookie(...(await this.getCookie()));
-    // const cdt = await page.target().createCDPSession();
-    // // minimize window
-    // const { windowId } = await cdt.send("Browser.getWindowForTarget");
-    // await cdt.send("Browser.setWindowBounds", {
-    //   windowId,
-    //   bounds: { windowState: "minimized" },
-    // });
 
     await page.goto('https://simplywall.st/stocks/ph/top-gainers');
 
-    // browser.on("targetchanged", async () => await this.saveCurrentCookies(cdt));
-    // browser.on("disconnected", async () => await this.saveCurrentCookies(cdt));
-    // page.on("close", async () => await this.saveCurrentCookies(cdt));
-
-    // if (1 === parseInt("1")) {
-    //   return;
-    // }
-    // await page.waitForNavigation();
     await page.waitForSelector('#root h1');
     await page.waitForFunction(
       `document.querySelectorAll('div[data-cy-id="scroll-pane"] table tbody tr[data-cy-id="stocks-table-row"]').length > 0`,
@@ -389,13 +267,6 @@ export class SimplyWallStreetCrawlerService {
         await page.waitForTimeout(1000);
         await dropdown2?.click();
 
-        // if ("1" === String(1)) {
-        //   return;
-        // }
-
-        // await page.waitForSelector(
-        //   'span[style="display: block;"] ul[data-cy-id="dropdown-list"] li'
-        // );
         const menuItem = await page.$x(
           `//ul[@data-cy-id="dropdown-list"]//li//a[contains(text(), "${g.dropdownName}")]`,
         );
@@ -485,38 +356,7 @@ export class SimplyWallStreetCrawlerService {
         console.log(`> skipping ${screener.name}...`);
         continue;
       }
-      // go to screeners page
-      // const screenerMenu = await page.waitForSelector(
-      //   `div[data-cy-id="main-navigation"] a[href="/screener/create"]`
-      // );
-      // await screenerMenu?.click();
-      // await page.waitForFunction(
-      //   `window.location.pathname.includes("/screener/create")`
-      // );
-      // const spanShouldBeShown = await page.waitForSelector(
-      //   `[data-cy-id="dropdown-saved-screeners"] span[style="display: none;"]`
-      // );
-      // if (!spanShouldBeShown) {
-      //   throw Error("Cannot find the span to enable dropdown");
-      // }
-      // await spanShouldBeShown?.evaluate((el) => (el.style.display = "block"));
 
-      // await page.waitForFunction(
-      //   `document.querySelectorAll('[data-cy-id="dropdown-saved-screeners"] ul[data-cy-id="dropdown-list"] li a[data-cy-id="dropdown-list-item"]').length > 0`
-      // );
-
-      // const savedScreener = await page.$x(
-      //   `.//*[@data-cy-id="dropdown-saved-screeners"]//ul[@data-cy-id="dropdown-list"]//li//a[@data-cy-id="dropdown-list-item"][contains(text(), "${screener.dropdownName}")]`
-      // );
-
-      // if (!savedScreener[0]) {
-      //   throw Error(`Cannot find the saved screener: "${screener.name}"`);
-      // }
-
-      // savedScreener[0].click();
-      // await page.waitForFunction(
-      //   `window.location.pathname.includes("${screener.urlIncludes}")`
-      // );
       console.log(`Crawling ${screener.name}...`);
       await page.goto(screener.url);
       const data = await this._crawlGrid(
@@ -615,25 +455,6 @@ export class SimplyWallStreetCrawlerService {
       }
     }
 
-    // this.emitter.emit(
-    //   SWS_CRAWL_COMPANY_PAGES_LIST_TO_CRAWL_LATER_COMPILED_EVENT,
-    //   {
-    //     crawlLaterCompanyPages: crawlLaterCompanyPages.map((c) => {
-    //       const existingDailyCrawlTypeId =
-    //         whatToCrawl === "all"
-    //           ? null
-    //           : whatToCrawl.whatToCrawl.sws_company?.find(
-    //               (n) => n.specificCrawlType === c.unique_symbol
-    //             )?.existingDailyCrawlTypeId ?? null;
-    //       return {
-    //         company: c,
-    //         existingDailyCrawlTypeId,
-    //       };
-    //     }),
-    //     dailyCrawl: whatToCrawl === "all" ? null : whatToCrawl.dailyCrawl,
-    //   } satisfies SwsCrawlCompanyPagesListToCrawlLaterCompiledEvent
-    // );
-
     // get all the sws_companies under this dailyCrawlId
     // update the dailyCrawlTypeId
     if (whatToCrawl !== 'all' && whatToCrawl.dailyCrawl?.id) {
@@ -661,11 +482,6 @@ export class SimplyWallStreetCrawlerService {
       let response: HTTPResponse | null = null;
       try {
         await page.goto(c.url);
-        // await page.waitForNavigation();
-        // await Promise.all([
-        //   await page.waitForSelector("#root h1"),
-        //   await page.waitForTimeout(150),
-        // ]);
         const _r = await Promise.all([
           page.waitForResponse(async (response) => {
             const shouldWait = response
@@ -711,18 +527,6 @@ export class SimplyWallStreetCrawlerService {
                 dataAt: whatToCrawl?.dailyCrawl?.dataAt as DateTime,
               },
       } satisfies SwsCrawlCompanyPageDataCrawledEvent);
-
-      //   await this._writeToFile(
-      //     dataObj,
-      //     path.join(
-      //       this.ROOT_FOLDER,
-      //       "data",
-      //       "simply-wall-street",
-      //       now ?? "",
-      //       "companies",
-      //       `${c.ticker_symbol}.json`
-      //     )
-      //   );
     }
 
     await this.puppeteerService.saveCurrentCookies(cdt);
