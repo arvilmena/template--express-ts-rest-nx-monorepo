@@ -440,7 +440,7 @@ export const swsIndustryAverage = sqliteTable(
   },
   (table) => {
     return {
-      unq: unique('sws_industry_averaget_unique').on(
+      unq: unique('sws_industry_average_unique').on(
         table.swsDataLastUpdated,
         table.industryId,
       ),
@@ -448,22 +448,22 @@ export const swsIndustryAverage = sqliteTable(
   },
 );
 
-export const dailyCategoryParent = sqliteTable(
-  'daily_category_parent',
+export const crawlDataSwsCompanyIndustryAverage = sqliteTable(
+  'crawl_data_sws_company__industry_average',
   {
     id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-    dailyCategoryId: integer('daily_category_id', {
+    crawlDataSwsCompanyId: integer('crawl_data_sws_company_id', {
       mode: 'number',
-    }).references(() => dailyCategory.id, { onDelete: 'cascade' }),
-    parentId: integer('daily_category_parent_id', {
+    }).references(() => crawlDataSwsCompany.id, { onDelete: 'cascade' }),
+    swsIndustryAverageId: integer('sws_industry_average_id', {
       mode: 'number',
-    }).references(() => dailyCategory.id, { onDelete: 'cascade' }),
+    }).references(() => swsIndustryAverage.id, { onDelete: 'cascade' }),
   },
   (table) => {
     return {
-      unq: unique('daily_category_parent_category_and_parent').on(
-        table.dailyCategoryId,
-        table.parentId,
+      unq: unique('crawl_data_sws_company__industry_average_unique').on(
+        table.crawlDataSwsCompanyId,
+        table.swsIndustryAverageId,
       ),
     };
   },
