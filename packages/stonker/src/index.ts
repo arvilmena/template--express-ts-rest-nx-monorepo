@@ -7,7 +7,6 @@ import {
   CrawlDataSwsCompanyCategoryRepository,
   CrawlDataSwsCompanyFreeCashFlowRepository,
   CrawlDataSwsCompanyRepository,
-  CrawlDataSwsCompanyStatementPivotRepository,
   CrawlDataSwsScreenerRepository,
   CrawlDataSwsScreenerResultRepository,
   CrawlDataSwsStockListRepository,
@@ -17,7 +16,6 @@ import {
   DailyCrawlRepository,
   DailyCrawlTypeRepository,
   DayRepository,
-  SwsCompanyStatementRepository,
 } from '@myawesomeorg/db';
 import { DailyCrawlFileSystem, FileSystem } from '@myawesomeorg/file-system';
 import EventEmitter2 from 'eventemitter2';
@@ -69,9 +67,6 @@ const crawlDataSwsCompanyCategoryRepository =
     dayRepository,
     dailyCategoryRepository,
   );
-const swsCompanyStatementRepository = new SwsCompanyStatementRepository();
-const crawlDataSwsCompanyStatementPivotRepository =
-  new CrawlDataSwsCompanyStatementPivotRepository();
 
 const eventEmitter = new EventEmitter2(eventEmitterConfig);
 const fileSystem = new FileSystem(StonkerConfig.APP_ROOT_DIR_ABSPATH);
@@ -109,15 +104,12 @@ const dailyCrawlFiles = new DailyCrawlFileSystem(
 
 const swsCompanyPageDataService = new SimplyWallStreetCompanyPageDataService(
   crawlDataSwsCompanyRepository,
-  swsCompanyStatementRepository,
-  crawlDataSwsCompanyStatementPivotRepository,
 );
 
 export {
   crawlDataSwsCompanyCategoryRepository,
   crawlDataSwsCompanyFreeCashFlowRepository,
   crawlDataSwsCompanyRepository,
-  crawlDataSwsCompanyStatementPivotRepository,
   crawlDataSwsScreenerRepository,
   crawlDataSwsScreenerResultRepository,
   crawlDataSwsStockListRepository,
@@ -130,5 +122,4 @@ export {
   dayRepository,
   puppeteerService,
   swsCompanyPageDataService,
-  swsCompanyStatementRepository,
 };

@@ -14,13 +14,13 @@ import {
 } from './daily-category.repository';
 
 export const insertCrawlDataSwsCompanyCategorySchema = createInsertSchema(
-  crawlDataSwsCompanyCategory
+  crawlDataSwsCompanyCategory,
 );
 
 export class CrawlDataSwsCompanyCategoryRepository {
   constructor(
     private readonly dayRepository: DayRepository,
-    private readonly dailyCategoryRepository: DailyCategoryRepository
+    private readonly dailyCategoryRepository: DailyCategoryRepository,
   ) {}
   async createAndAttachToCompanyCategoryByApiResponse(
     crawledAt: DateTime,
@@ -30,17 +30,17 @@ export class CrawlDataSwsCompanyCategoryRepository {
       'sic_name' | 'sub_type_id'
     >,
     isMostParent: boolean,
-    isTail: boolean
+    isTail: boolean,
   ): Promise<CrawlDataSwsCompanyCategoryFindReturnType> {
     if (swsCompanyData === undefined) {
       throw new Error(`swsCompanyData is not valid`);
     }
     const day = await this.dayRepository.getByLuxon(
-      manilaLuxonDateToCrawlDataAtFormat(crawledAt)
+      manilaLuxonDateToCrawlDataAtFormat(crawledAt),
     );
     if (!day) {
       throw new Error(
-        `Failed to create a day record for ${swsCompanyData.id}: ${swsCompanyData.crawledAt}`
+        `Failed to create a day record for ${swsCompanyData.id}: ${swsCompanyData.crawledAt}`,
       );
     }
     const data: DailyCategoryRepositoryCreateOneType = {
@@ -49,13 +49,13 @@ export class CrawlDataSwsCompanyCategoryRepository {
       source: 'sws',
       isMostParent: Boolean(true === isMostParent),
       isTail: Boolean(true === isTail),
+      swsSubTypeId: apiResponse.sub_type_id,
     };
-    const createdDailyCategory = await this.dailyCategoryRepository.createOne(
-      data
-    );
+    const createdDailyCategory =
+      await this.dailyCategoryRepository.createOne(data);
     if (!createdDailyCategory) {
       throw new Error(
-        `Failed to create a daily category record for ${swsCompanyData.id}: ${data['name']}`
+        `Failed to create a daily category record for ${swsCompanyData.id}: ${data['name']}`,
       );
     }
     const [v] = await db
@@ -85,9 +85,9 @@ export class CrawlDataSwsCompanyCategoryRepository {
         and(
           eq(
             crawlDataSwsCompanyCategory.crawlDataSwsCompanyId,
-            crawlDataSwsCompanyId
+            crawlDataSwsCompanyId,
           ),
-          eq(crawlDataSwsCompanyCategory.dailyCategoryId, dailyCategoryId)
+          eq(crawlDataSwsCompanyCategory.dailyCategoryId, dailyCategoryId),
         ),
     });
   }

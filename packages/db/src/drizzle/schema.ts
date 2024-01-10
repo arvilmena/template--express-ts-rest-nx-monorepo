@@ -315,7 +315,7 @@ export const dailyCategory = sqliteTable(
     source: text('source', {
       enum: ['sws', 'pse', 'investa'],
     }).notNull(),
-    swsSubTypeId: text('sws_sub_type_id'),
+    swsSubTypeId: integer('sws_sub_type_id'),
     name: text('name').notNull(),
     slug: text('slug').notNull(),
     isMostParent: integer('is_most_parent', { mode: 'boolean' }).notNull(),
@@ -383,41 +383,87 @@ export const dailyCategoryParentRelations = relations(
   }),
 );
 
-export const swsCompanyStatement = sqliteTable(
-  'sws_company_statement',
+export const swsIndustryAverage = sqliteTable(
+  'sws_industry_average',
   {
     id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-    key: text('statement_name').notNull(),
-    description: text('description').notNull(),
-    effectType: text('type').notNull(),
+    swsDataLastUpdated: blob('sws_data_last_updated', {
+      mode: 'bigint',
+    }).notNull(),
+    industryId: integer('sws_industry_id').notNull(),
+    countryIso: integer('country_iso').notNull(),
+    name: integer('name').notNull(),
+    valueScore: real('value_score').notNull(),
+    dividendsScore: real('dividends_score').notNull(),
+    futurePerformanceScore: real('future_performance_score').notNull(),
+    healthScore: real('health_score').notNull(),
+    pastPerformanceScore: real('past_performance_score').notNull(),
+    totalScore: real('total_score').notNull(),
+    sharePrice: real('share_price').notNull(),
+    marketCap: real('market_cap').notNull(),
+    intrinsicDiscount: real('intrinsic_discount').notNull(),
+    pe: real('pe').notNull(),
+    pb: real('pb').notNull(),
+    peg: real('peg').notNull(),
+    futureOneYearGrowth: real('future_one_year_growth').notNull(),
+    futureThreeYearGrowth: real('future_three_year_growth').notNull(),
+    futureOneYearROE: real('future_one_year_roe').notNull(),
+    futureThreeYearROE: real('future_three_year_roe').notNull(),
+    pastOneYearGrowth: real('past_one_year_growth').notNull(),
+    pastFiveYearGrowth: real('past_five_year_growth').notNull(),
+    roe: real('roe').notNull(),
+    roa: real('roa').notNull(),
+    dividendYield: real('dividend_yield').notNull(),
+    futureDividendYield: real('future_dividend_yield').notNull(),
+    eps: real('eps').notNull(),
+    insiderBuying: real('insider_buying').notNull(),
+    debtEquity: real('debt_equity').notNull(),
+    leveredBeta: real('levered_beta').notNull(),
+    unleveredBeta: real('unlevered_beta').notNull(),
+    totalBaseCount: real('total_base_count').notNull(),
+    profitableCount: real('profitable_count').notNull(),
+    analystCoverageCount: real('analyst_coverage_count').notNull(),
+    dividendCount: real('dividend_count').notNull(),
+    betaCount: real('beta_count').notNull(),
+    earningsPerShareGrowthAnnual: real(
+      'earnings_per_share_growth_annual',
+    ).notNull(),
+    netIncomeGrowthAnnual: real('net_income_growth_annual').notNull(),
+    cashOpsGrowthAnnual: real('cash_ops_growth_annual').notNull(),
+    revenueGrowthAnnual: real('revenue_growth_annual').notNull(),
+    leveredBetaMedian: real('levered_beta_median').notNull(),
+    baseSource: text('base_source'),
+    profitableSource: text('profitable_source'),
+    analystSource: text('analyst_source'),
+    dividendSource: text('dividend_source'),
+    betaSource: text('beta_source'),
   },
   (table) => {
     return {
-      unq: unique('sws_company_statement_key_description_and_type').on(
-        table.key,
-        table.description,
-        table.effectType,
+      unq: unique('sws_industry_averaget_unique').on(
+        table.swsDataLastUpdated,
+        table.industryId,
       ),
     };
   },
 );
 
-export const crawlDataSwsCompanyStatement = sqliteTable(
-  'crawl_data_sws_company_statement',
+export const dailyCategoryParent = sqliteTable(
+  'daily_category_parent',
   {
     id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-    statementId: integer('sws_company_statement_id', {
+    dailyCategoryId: integer('daily_category_id', {
       mode: 'number',
-    }).references(() => swsCompanyStatement.id, { onDelete: 'cascade' }),
-    crawlDataSwsCompanyId: integer('crawl_data_sws_company_id', {
+    }).references(() => dailyCategory.id, { onDelete: 'cascade' }),
+    parentId: integer('daily_category_parent_id', {
       mode: 'number',
-    }).references(() => crawlDataSwsCompany.id, { onDelete: 'cascade' }),
+    }).references(() => dailyCategory.id, { onDelete: 'cascade' }),
   },
   (table) => {
     return {
-      unq: unique('crawl_data_sws_company_statement_unique').on(
-        table.statementId,
-        table.crawlDataSwsCompanyId,
+      unq: unique('daily_category_parent_category_and_parent').on(
+        table.dailyCategoryId,
+        table.parentId,
       ),
     };
   },
