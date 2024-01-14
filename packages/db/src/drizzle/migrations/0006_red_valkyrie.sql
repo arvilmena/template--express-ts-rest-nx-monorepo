@@ -1,0 +1,61 @@
+CREATE TABLE `crawl_data_sws_company__industry_average` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`crawl_data_sws_company_id` integer,
+	`sws_industry_average_id` integer,
+	FOREIGN KEY (`crawl_data_sws_company_id`) REFERENCES `crawl_data_sws_company`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`sws_industry_average_id`) REFERENCES `sws_industry_average`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `sws_industry_average` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`sws_data_last_updated` blob NOT NULL,
+	`sws_industry_id` integer NOT NULL,
+	`country_iso` text NOT NULL,
+	`name` text NOT NULL,
+	`value_score` real,
+	`dividends_score` real,
+	`future_performance_score` real,
+	`health_score` real,
+	`past_performance_score` real,
+	`total_score` real,
+	`share_price` real,
+	`market_cap` real,
+	`intrinsic_discount` real,
+	`pe` real,
+	`pb` real,
+	`peg` real,
+	`future_one_year_growth` real,
+	`future_three_year_growth` real,
+	`future_one_year_roe` real,
+	`future_three_year_roe` real,
+	`past_one_year_growth` real,
+	`past_five_year_growth` real,
+	`roe` real,
+	`roa` real,
+	`dividend_yield` real,
+	`future_dividend_yield` real,
+	`eps` real,
+	`insider_buying` real,
+	`debt_equity` real,
+	`levered_beta` real,
+	`unlevered_beta` real,
+	`total_base_count` real,
+	`profitable_count` real,
+	`analyst_coverage_count` real,
+	`dividend_count` real,
+	`beta_count` real,
+	`earnings_per_share_growth_annual` real,
+	`net_income_growth_annual` real,
+	`cash_ops_growth_annual` real,
+	`revenue_growth_annual` real,
+	`levered_beta_median` real,
+	`base_source` text,
+	`profitable_source` text,
+	`analyst_source` text,
+	`dividend_source` text,
+	`beta_source` text
+);
+--> statement-breakpoint
+ALTER TABLE daily_category ADD `sws_sub_type_id` integer;--> statement-breakpoint
+CREATE UNIQUE INDEX `crawl_data_sws_company__industry_average_unique` ON `crawl_data_sws_company__industry_average` (`crawl_data_sws_company_id`,`sws_industry_average_id`);--> statement-breakpoint
+CREATE UNIQUE INDEX `sws_industry_average_unique` ON `sws_industry_average` (`sws_data_last_updated`,`sws_industry_id`);

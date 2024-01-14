@@ -1,0 +1,22 @@
+<mxfile host="app.diagrams.net" modified="2024-01-10T19:00:59.027Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" etag="SSgNmeSEXBL59Duz4Bf6" version="22.1.18" type="device">
+  <diagram name="Page-1" id="mLVfI_jZb4PiT7FXVgMK">
+    <mxGraphModel dx="2074" dy="2255" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="L84s8jwZL5ylNsVvDcBl-1" value="&lt;div style=&quot;color: rgb(204, 204, 204); background-color: rgb(31, 31, 31); font-family: &amp;quot;Fira Code&amp;quot;, Monaco, &amp;quot;Courier New&amp;quot;, monospace, Menlo, Monaco, &amp;quot;Courier New&amp;quot;, monospace; font-size: 15px; line-height: 30px;&quot;&gt;swsIndustryAverage&lt;/div&gt;&lt;div style=&quot;color: rgb(204, 204, 204); background-color: rgb(31, 31, 31); font-family: &amp;quot;Fira Code&amp;quot;, Monaco, &amp;quot;Courier New&amp;quot;, monospace, Menlo, Monaco, &amp;quot;Courier New&amp;quot;, monospace; font-size: 15px; line-height: 30px;&quot;&gt;&lt;div style=&quot;line-height: 30px;&quot;&gt;&lt;div&gt;swsDataLastUpdated&lt;span style=&quot;color: #9cdcfe;&quot;&gt;:&lt;/span&gt; &lt;span style=&quot;color: #dcdcaa;&quot;&gt;blob&lt;/span&gt;(&lt;span style=&quot;color: #ce9178;&quot;&gt;&#39;sws_data_last_updated&#39;&lt;/span&gt;, {&lt;/div&gt;&lt;div&gt;      &lt;span style=&quot;color: #9cdcfe;&quot;&gt;mode&lt;/span&gt;&lt;span style=&quot;color: #9cdcfe;&quot;&gt;:&lt;/span&gt; &lt;span style=&quot;color: #ce9178;&quot;&gt;&#39;bigint&#39;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;    }).&lt;span style=&quot;color: #dcdcaa;&quot;&gt;notNull&lt;/span&gt;()&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="40" width="330" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="L84s8jwZL5ylNsVvDcBl-4" value="&lt;h1&gt;Day Report&lt;/h1&gt;&lt;p&gt;Listing all IndustryAverage, to get a list of each sector/market performance&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="-90" width="330" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="L84s8jwZL5ylNsVvDcBl-5" value="&lt;div style=&quot;color: rgb(204, 204, 204); background-color: rgb(31, 31, 31); font-family: &amp;quot;Fira Code&amp;quot;, Monaco, &amp;quot;Courier New&amp;quot;, monospace, Menlo, Monaco, &amp;quot;Courier New&amp;quot;, monospace; font-size: 15px; line-height: 30px;&quot;&gt;day&lt;/div&gt;&lt;div style=&quot;color: rgb(204, 204, 204); background-color: rgb(31, 31, 31); font-family: &amp;quot;Fira Code&amp;quot;, Monaco, &amp;quot;Courier New&amp;quot;, monospace, Menlo, Monaco, &amp;quot;Courier New&amp;quot;, monospace; font-size: 15px; line-height: 30px;&quot;&gt;&lt;div style=&quot;line-height: 30px;&quot;&gt;dataAt&lt;span style=&quot;color: #9cdcfe;&quot;&gt;:&lt;/span&gt; &lt;span style=&quot;color: #dcdcaa;&quot;&gt;luxonDateTime&lt;/span&gt;(&lt;span style=&quot;color: #ce9178;&quot;&gt;&#39;data_at&#39;&lt;/span&gt;).&lt;span style=&quot;color: #dcdcaa;&quot;&gt;notNull&lt;/span&gt;().&lt;span style=&quot;color: #dcdcaa;&quot;&gt;unique&lt;/span&gt;().&lt;span style=&quot;color: #dcdcaa;&quot;&gt;primaryKey&lt;/span&gt;()&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="L84s8jwZL5ylNsVvDcBl-6" value="Get all IndustryAverage where sws_last_updated &amp;lt;= day.dataAt" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="130" width="510" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

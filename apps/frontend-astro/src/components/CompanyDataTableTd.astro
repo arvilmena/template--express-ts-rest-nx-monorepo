@@ -1,0 +1,28 @@
+---
+interface Props {
+  value: number | null;
+  compare?:
+    | undefined
+    | { vs: number | null; operator: '<' | '>' | '>=' | '=<' | '==' };
+}
+
+const { value, compare } = Astro.props;
+let isGreen = false;
+let isRed = false;
+
+if (!compare) {
+  isGreen = (value ?? 0) > 0;
+  isRed = (value ?? 0) < 0;
+}
+---
+
+<td
+  class:list={[
+    {
+      'text-green-600': isGreen,
+      'text-red-600': isRed,
+    },
+  ]}
+>
+  {value?.toCleanFloatingNumber()}
+</td>

@@ -11,7 +11,7 @@ export default defineConfig({
       },
     },
   },
-  output: 'server',
+  // output: 'server',
   integrations: [
     (() => {
       console.log(`my astro config loaded...`);

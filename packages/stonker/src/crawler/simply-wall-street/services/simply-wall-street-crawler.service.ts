@@ -18,9 +18,11 @@ import {
 import { DailyCrawlTypeRepository } from '@myawesomeorg/db';
 import { getCurrentManilaDate } from '@myawesomeorg/utils';
 import EventEmitter2 from 'eventemitter2';
+import { minify } from 'html-minifier-terser';
 import { DateTime } from 'luxon';
 import { ElementHandle, HTTPResponse, Page } from 'puppeteer';
 import { PuppeteerService } from '../../puppeteer/puppeteer.service';
+
 export class SimplyWallStreetCrawlerService {
   constructor(
     private readonly dailyCrawlTypeRepository: DailyCrawlTypeRepository,
@@ -50,12 +52,15 @@ export class SimplyWallStreetCrawlerService {
 
         let response: HTTPResponse | null = null;
         const _r = await Promise.all([
-          page.waitForResponse(async (response) => {
-            const shouldWait =
-              response.url().includes('/api/grid/filter') &&
-              response.request().postData()?.includes('"ph');
-            return Boolean(shouldWait);
-          }),
+          page.waitForResponse(
+            async (response) => {
+              const shouldWait =
+                response.url().includes('/api/grid/filter') &&
+                response.request().postData()?.includes('"ph');
+              return Boolean(shouldWait);
+            },
+            { timeout: 5_000 },
+          ),
         ]);
         response = _r[0];
         const _result: SwsCrawlGridApiResponse = await response.json();
@@ -133,13 +138,16 @@ export class SimplyWallStreetCrawlerService {
     let response: HTTPResponse | null = null;
     try {
       const _r = await Promise.all([
-        page.waitForResponse((response) => {
-          const shouldWait =
-            response.url().includes('/api/grid/filter') &&
-            response.request().postData()?.includes('"ph');
-          if (!shouldWait) return false;
-          return true;
-        }),
+        page.waitForResponse(
+          (response) => {
+            const shouldWait =
+              response.url().includes('/api/grid/filter') &&
+              response.request().postData()?.includes('"ph');
+            if (!shouldWait) return false;
+            return true;
+          },
+          { timeout: 5_000 },
+        ),
       ]);
       response = _r[0];
     } catch (error) {
@@ -477,20 +485,15 @@ export class SimplyWallStreetCrawlerService {
       }
     }
 
+    let crawl: Awaited<
+      ReturnType<SimplyWallStreetCrawlerService['_crawlCompanyPage']>
+    >;
     for (const c of crawlLaterCompanyPages) {
-      console.log(`crawling company: ${c.unique_symbol}...`);
-      let response: HTTPResponse | null = null;
       try {
-        await page.goto(c.url);
-        const _r = await Promise.all([
-          page.waitForResponse(async (response) => {
-            const shouldWait = response
-              .url()
-              .includes('/api/company/stocks/ph/');
-            return shouldWait;
-          }),
-        ]);
-        response = _r[0];
+        crawl = await this._crawlCompanyPage({
+          company: c,
+          page,
+        });
       } catch (error) {
         const errorData = {
           browserProcess,
@@ -502,19 +505,8 @@ export class SimplyWallStreetCrawlerService {
         );
         throw new SwsCrawlPuppeteerError(JSON.stringify(errorData));
       }
-
-      const _request = response.request();
-      const requestPayload = {
-        url: _request.url(),
-        postData: _request.postData(),
-        headers: _request.headers(),
-      };
-      const data: SwsCrawlCompanyPageData = await response.json();
       this.emitter.emit(SWS_CRAWL_COMPANY_PAGE_DATA_CRAWLED_EVENT, {
-        crawl: {
-          data,
-          requestPayload,
-        },
+        crawl,
         companyPage: crawlLaterCompanyPagesWithDailyCrawlTypeId.find(
           (n) => n.company.unique_symbol === c.unique_symbol,
         ) as (typeof crawlLaterCompanyPagesWithDailyCrawlTypeId)[number],
@@ -534,5 +526,63 @@ export class SimplyWallStreetCrawlerService {
     await browser.close();
 
     return "okay it's working";
+  }
+
+  async _crawlCompanyPage({
+    company,
+    page,
+  }: {
+    company: SwsCrawlCompanyPagesListToCrawlLater[number];
+    page: Page;
+  }) {
+    console.log(`crawling company: ${company.unique_symbol}...`);
+    let response: HTTPResponse | null = null;
+    let html: string | null = null;
+    await page.goto(company.url);
+    const _r = await Promise.all([
+      page.waitForResponse(
+        async (response) => {
+          const shouldWait = response.url().includes('/api/company/stocks/ph/');
+          return shouldWait;
+        },
+        { timeout: 5_000 },
+      ),
+    ]);
+    response = _r[0];
+    await page.waitForFunction(
+      `document.querySelector('#company-report[data-cy-id="company-report"] [data-cy-id="footer"]').innerText.includes("ACN")`,
+    );
+
+    html =
+      (await page.evaluate(() => document?.querySelector('*')?.outerHTML)) ??
+      null;
+
+    if (typeof html === 'string') {
+      html = await minify(html, {
+        removeComments: true,
+        minifyCSS: true,
+        minifyJS: true,
+        collapseInlineTagWhitespace: true,
+        collapseWhitespace: true,
+        noNewlinesBeforeTagClose: true,
+        removeEmptyAttributes: true,
+        removeEmptyElements: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+      });
+    }
+
+    const _request = response.request();
+    const requestPayload = {
+      url: _request.url(),
+      postData: _request.postData(),
+      headers: _request.headers(),
+    };
+    const data: SwsCrawlCompanyPageData = await response.json();
+    return {
+      requestPayload,
+      data,
+      html,
+    };
   }
 }

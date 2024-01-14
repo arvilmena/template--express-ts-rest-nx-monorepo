@@ -8,7 +8,10 @@ import { luxonToManilaSqlFormat, slugify } from '@myawesomeorg/utils';
 import { DateTime } from 'luxon';
 import * as path from 'path';
 
-type SaveSwsCrawlDataParamsType = { luxonDataAt: DateTime; data: object } & (
+type SaveSwsCrawlDataParamsType = {
+  luxonDataAt: DateTime;
+  data: object;
+} & (
   | {
       crawlType: 'sws_stock_list';
       crawlTypeSpecific: SwsStockListSpecificCrawlTypesType;

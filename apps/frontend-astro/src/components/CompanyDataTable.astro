@@ -1,0 +1,219 @@
+---
+import { CrawlDataSwsCompanyFindAllUnderCategoryReturnType } from '@myawesomeorg/db';
+import { luxonToManilaSqlFormat } from '@myawesomeorg/utils';
+import { randomUUID } from 'crypto';
+import { DateTime } from 'luxon';
+import CompanyDataTableTd from './CompanyDataTableTd.astro';
+
+interface Props {
+  companies: CrawlDataSwsCompanyFindAllUnderCategoryReturnType;
+}
+
+const { companies } = Astro.props;
+const uniqueId = randomUUID();
+---
+
+<button
+  id={`btn-get-query-${uniqueId}`}
+  class="inline-flex justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+  >Get Current Search builder query</button
+>
+<div id={`btn-get-query-result-${uniqueId}`}></div>
+<table id={`data-table-${uniqueId}`} class="display w-full">
+  <thead>
+    <tr>
+      <th>swsUniqueSymbol</th>
+      <th>lastUpdated</th>
+      {
+        /* <th>scoreValue</th>
+              <th>scoreIncome</th>
+              <th>scoreHealth</th>
+              <th>scorePast</th>
+              <th>scoreFuture</th>
+              <th>scoreManagement</th>
+              <th>scoreMisc</th> */
+      }
+      <th>scoreScoreTotal</th>
+      <th>scoreSentence</th>
+      <th>intrinsicValueDiscount</th>
+      <th>dividendYield</th>
+      <th>dividendYieldFuture</th>
+      <th>pe</th>
+      <th>peForward1y</th>
+      <th>ps</th>
+      <th>psForward1y</th>
+      <th>epsAnnualGrowthRate</th>
+      <th>netIncomeAnnualGrowthRate</th>
+      {/* <th>snowflakeColor</th> */}
+      <!-- <th>sharePrice</th> -->
+      <th>intrinsicValue</th>
+      <th>intrinsicValueModel</th>
+      <th>roe</th>
+      <th>roeFuture3y</th>
+      <th>priceTarget</th>
+      <th>priceTargetAnalystCount</th>
+      <th>priceTargetHigh</th>
+      <th>priceTargetLow</th>
+      <th>peerPreferredComparison</th>
+      <th>peerPreferredValue</th>
+      <th>dividendPayoutRatio</th>
+      <th>dividendPayoutRatio3Y</th>
+      <th>dividendPayoutRatioMedian3Y</th>
+      <th>dividendPaymentsGrowthAnnual</th>
+      <th>dividendCashPayoutRatio</th>
+      <th>leveredFreeCashFlowAnnualGrowth</th>
+    </tr>
+  </thead>
+  {
+    companies.length > 0 && (
+      <tbody>
+        {companies.map((c) => {
+          return (
+            <tr>
+              <td>{c.crawl_data_sws_company.swsUniqueSymbol}</td>
+              <td>
+                {luxonToManilaSqlFormat(
+                  DateTime.fromMillis(
+                    Number(c.crawl_data_sws_company.swsDataLastUpdated),
+                  ),
+                )}
+              </td>
+              {/* <td>{c.crawl_data_sws_company.scoreValue}</td>
+                    <td>{c.crawl_data_sws_company.scoreIncome}</td>
+                    <td>{c.crawl_data_sws_company.scoreHealth}</td>
+                    <td>{c.crawl_data_sws_company.scorePast}</td>
+                    <td>{c.crawl_data_sws_company.scoreFuture}</td>
+                    <td>{c.crawl_data_sws_company.scoreManagement}</td>
+                    <td>{c.crawl_data_sws_company.scoreMisc}</td> */}
+              <td>
+                {c.crawl_data_sws_company.scoreScoreTotal?.toCleanFloatingNumber()}
+              </td>
+              <td>{c.crawl_data_sws_company.scoreSentence}</td>
+              <td
+                class:list={[
+                  {
+                    'text-green-600':
+                      (c?.crawl_data_sws_company.intrinsicValueDiscount ?? 0) >
+                      0,
+                  },
+                ]}
+              >
+                {c.crawl_data_sws_company.intrinsicValueDiscount?.toCleanFloatingNumber()}
+              </td>
+              <td>
+                {c.crawl_data_sws_company.dividendYield?.toCleanFloatingNumber()}
+              </td>
+              <td
+                class:list={[
+                  {
+                    'text-green-600':
+                      (c?.crawl_data_sws_company.dividendYieldFuture ?? 0) >
+                      (c?.crawl_data_sws_company.dividendYield ?? 0),
+                  },
+                ]}
+              >
+                {c.crawl_data_sws_company.dividendYieldFuture?.toCleanFloatingNumber()}
+              </td>
+              <td>{c.crawl_data_sws_company.pe?.toCleanFloatingNumber()}</td>
+              <td
+                class:list={[
+                  {
+                    'text-green-600':
+                      (c?.crawl_data_sws_company.peForward1y ?? 0) >
+                      (c?.crawl_data_sws_company.pe ?? 0),
+                  },
+                ]}
+              >
+                {c.crawl_data_sws_company.peForward1y?.toCleanFloatingNumber()}
+              </td>
+              <td>{c.crawl_data_sws_company.ps?.toCleanFloatingNumber()}</td>
+              <td
+                class:list={[
+                  {
+                    'text-green-600':
+                      (c?.crawl_data_sws_company.psForward1y ?? 0) >
+                      (c?.crawl_data_sws_company.ps ?? 0),
+                  },
+                ]}
+              >
+                {c.crawl_data_sws_company.psForward1y?.toCleanFloatingNumber()}
+              </td>
+              <CompanyDataTableTd
+                value={c?.crawl_data_sws_company.epsAnnualGrowthRate}
+              />
+              <CompanyDataTableTd
+                value={c?.crawl_data_sws_company.netIncomeAnnualGrowthRate}
+              />
+              {/* <td>{c.crawl_data_sws_company.snowflakeColor}</td> */}
+              {/*  <td>
+                {c.crawl_data_sws_company.sharePrice?.toCleanFloatingNumber()}
+              </td>*/}
+              <td>
+                {c.crawl_data_sws_company.intrinsicValue?.toCleanFloatingNumber()}
+              </td>
+              <td>{c.crawl_data_sws_company.intrinsicValueModel}</td>
+              <CompanyDataTableTd value={c?.crawl_data_sws_company.roe} />
+              <CompanyDataTableTd
+                value={c?.crawl_data_sws_company.roeFuture3y}
+              />
+              <td>
+                {c.crawl_data_sws_company.priceTarget?.toCleanFloatingNumber()}
+              </td>
+              <td>{c.crawl_data_sws_company.priceTargetAnalystCount}</td>
+              <td>
+                {c.crawl_data_sws_company.priceTargetHigh?.toCleanFloatingNumber()}
+              </td>
+              <td>
+                {c.crawl_data_sws_company.priceTargetLow?.toCleanFloatingNumber()}
+              </td>
+              <td>{c.crawl_data_sws_company.peerPreferredComparison}</td>
+              <td>
+                {c.crawl_data_sws_company.peerPreferredValue?.toCleanFloatingNumber()}
+              </td>
+              <td>
+                {c.crawl_data_sws_company.dividendPayoutRatio?.toCleanFloatingNumber()}
+              </td>
+              <td>
+                {c.crawl_data_sws_company.dividendPayoutRatio3Y?.toCleanFloatingNumber()}
+              </td>
+              <td>
+                {c.crawl_data_sws_company.dividendPayoutRatioMedian3Y?.toCleanFloatingNumber()}
+              </td>
+              <td>
+                {c.crawl_data_sws_company.dividendPaymentsGrowthAnnual?.toCleanFloatingNumber()}
+              </td>
+              <td>
+                {c.crawl_data_sws_company.dividendCashPayoutRatio?.toCleanFloatingNumber()}
+              </td>
+              <td>
+                {c.crawl_data_sws_company.leveredFreeCashFlowAnnualGrowth?.toCleanFloatingNumber()}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    )
+  }
+</table>
+
+<script is:inline define:vars={{ uniqueId }}>
+  $(document).ready(function () {
+    $('#' + `data-table-${uniqueId}`).DataTable({
+      paging: false,
+      fixedColumns: { left: 1 },
+      colReorder: { enable: true },
+      fixedHeader: {
+        header: true,
+      },
+      dom: 'Qlfrtip',
+    });
+    $('#' + `btn-get-query-${uniqueId}`).on('click', function () {
+      stored = $('#' + `data-table-${uniqueId}`)
+        .DataTable()
+        .searchBuilder.getDetails();
+      $('#' + `btn-get-query-result-${uniqueId}`).text(
+        JSON.stringify(stored, null, '\t'),
+      );
+    });
+  });
+</script>

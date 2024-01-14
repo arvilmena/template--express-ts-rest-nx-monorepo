@@ -33,6 +33,7 @@ import { EventEmitter2 } from 'eventemitter2';
 import { DateTime } from 'luxon';
 import { dailyCrawlFiles } from '..';
 import { StonkerCrawler } from '../crawler';
+import { SimplyWallStreetCompanyPageDataService } from '../crawler/simply-wall-street/services/simply-wall-street-company-page-data.service';
 
 export class StonkerEvents {
   constructor(
@@ -49,6 +50,7 @@ export class StonkerEvents {
     private readonly crawlDataSwsCompanyCategoryRepository: CrawlDataSwsCompanyCategoryRepository,
     private readonly dailyCategoryParentRepository: DailyCategoryParentRepository,
     private readonly crawler: StonkerCrawler,
+    private readonly simplyWallStreetCompanyPageDataService: SimplyWallStreetCompanyPageDataService,
   ) {
     emitter.on(
       SWS_CRAWL_GRID_RESULT_EVENT,
@@ -309,6 +311,14 @@ export class StonkerEvents {
         });
       }
     }
+
+    /** Save Company data */
+    // TODO: all the logic above should be
+    //  moved to the SimplyWallStreetCompanyPageDataService
+    await this.simplyWallStreetCompanyPageDataService.saveCompanyData(
+      companyData,
+    );
+    /** Save Company data ends */
 
     // attach dataId to dailyCrawlType if defined
     if (event?.dailyCrawl?.id && swsCompanyData) {

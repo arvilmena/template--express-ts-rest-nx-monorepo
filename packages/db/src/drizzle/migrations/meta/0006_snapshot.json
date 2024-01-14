@@ -1,0 +1,1385 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "id": "ce0176bb-eb00-4480-917c-c8dd8c98ecf2",
+  "prevId": "26f692a8-8ce7-4113-9b7c-23aa53393d1b",
+  "tables": {
+    "crawl_data_sws_company": {
+      "name": "crawl_data_sws_company",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "crawled_at": {
+          "name": "crawled_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_id": {
+          "name": "sws_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_unique_symbol": {
+          "name": "sws_unique_symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_data_last_updated": {
+          "name": "sws_data_last_updated",
+          "type": "blob",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "score_value": {
+          "name": "score_value",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_income": {
+          "name": "score_income",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_health": {
+          "name": "score_health",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_past": {
+          "name": "score_past",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_future": {
+          "name": "score_future",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_management": {
+          "name": "score_management",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_misc": {
+          "name": "score_misc",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_score_total": {
+          "name": "score_score_total",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_sentence": {
+          "name": "score_sentence",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "snowflake_color": {
+          "name": "snowflake_color",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "share_price": {
+          "name": "share_price",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value_pe": {
+          "name": "value_pe",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value_ps": {
+          "name": "value_ps",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "roe": {
+          "name": "roe",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value_price_target": {
+          "name": "value_price_target",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value_price_target_analyst_count": {
+          "name": "value_price_target_analyst_count",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value_price_target_high": {
+          "name": "value_price_target_high",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value_price_target_low": {
+          "name": "value_price_target_low",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_earnings_per_share_growth_annual": {
+          "name": "future_earnings_per_share_growth_annual",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_net_income_growth_annual": {
+          "name": "future_net_income_growth_annual",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_roe_3y": {
+          "name": "future_roe_3y",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_forward_pe_1y": {
+          "name": "future_forward_pe_1y",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_forward_ps_1y": {
+          "name": "future_forward_ps_1y",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "peer_preferred_multiple": {
+          "name": "peer_preferred_multiple",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "peer_preferred_relative_multiple_average_peer_value": {
+          "name": "peer_preferred_relative_multiple_average_peer_value",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "intrinsic_value": {
+          "name": "intrinsic_value",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "intrinsic_value_model": {
+          "name": "intrinsic_value_model",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "intrinsic_value_discount": {
+          "name": "intrinsic_value_discount",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_yield": {
+          "name": "dividend_yield",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_yield_future": {
+          "name": "dividend_yield_future",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_payout_ratio": {
+          "name": "dividend_payout_ratio",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_payout_ratio_3y": {
+          "name": "dividend_payout_ratio_3y",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_payout_ratio_median_3yr": {
+          "name": "dividend_payout_ratio_median_3yr",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_payments_growth_annual": {
+          "name": "dividend_payments_growth_annual",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_cash_payout_ratio": {
+          "name": "dividend_cash_payout_ratio",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "health_levered_free_cash_flow_growth_annual": {
+          "name": "health_levered_free_cash_flow_growth_annual",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "crawled_at_and_sws_id": {
+          "name": "crawled_at_and_sws_id",
+          "columns": [
+            "crawled_at",
+            "sws_id"
+          ],
+          "isUnique": true
+        },
+        "sws_id_and_sws_data_last_updated": {
+          "name": "sws_id_and_sws_data_last_updated",
+          "columns": [
+            "sws_id",
+            "sws_data_last_updated"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "crawl_data_sws_company_category": {
+      "name": "crawl_data_sws_company_category",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "crawl_data_sws_company_id": {
+          "name": "crawl_data_sws_company_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "daily_category_id": {
+          "name": "daily_category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "crawl_data_sws_company_category_company_and_category": {
+          "name": "crawl_data_sws_company_category_company_and_category",
+          "columns": [
+            "crawl_data_sws_company_id",
+            "daily_category_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "crawl_data_sws_company_category_crawl_data_sws_company_id_crawl_data_sws_company_id_fk": {
+          "name": "crawl_data_sws_company_category_crawl_data_sws_company_id_crawl_data_sws_company_id_fk",
+          "tableFrom": "crawl_data_sws_company_category",
+          "tableTo": "crawl_data_sws_company",
+          "columnsFrom": [
+            "crawl_data_sws_company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "crawl_data_sws_company_category_daily_category_id_daily_category_id_fk": {
+          "name": "crawl_data_sws_company_category_daily_category_id_daily_category_id_fk",
+          "tableFrom": "crawl_data_sws_company_category",
+          "tableTo": "daily_category",
+          "columnsFrom": [
+            "daily_category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "crawl_data_sws_company_free_cash_flow": {
+      "name": "crawl_data_sws_company_free_cash_flow",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "sws_id": {
+          "name": "sws_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_unique_symbol": {
+          "name": "sws_unique_symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data_at": {
+          "name": "data_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "levered_free_cash_flow": {
+          "name": "levered_free_cash_flow",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "data_at_and_sws_id": {
+          "name": "data_at_and_sws_id",
+          "columns": [
+            "data_at",
+            "sws_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "crawl_data_sws_company__industry_average": {
+      "name": "crawl_data_sws_company__industry_average",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "crawl_data_sws_company_id": {
+          "name": "crawl_data_sws_company_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sws_industry_average_id": {
+          "name": "sws_industry_average_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "crawl_data_sws_company__industry_average_unique": {
+          "name": "crawl_data_sws_company__industry_average_unique",
+          "columns": [
+            "crawl_data_sws_company_id",
+            "sws_industry_average_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "crawl_data_sws_company__industry_average_crawl_data_sws_company_id_crawl_data_sws_company_id_fk": {
+          "name": "crawl_data_sws_company__industry_average_crawl_data_sws_company_id_crawl_data_sws_company_id_fk",
+          "tableFrom": "crawl_data_sws_company__industry_average",
+          "tableTo": "crawl_data_sws_company",
+          "columnsFrom": [
+            "crawl_data_sws_company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "crawl_data_sws_company__industry_average_sws_industry_average_id_sws_industry_average_id_fk": {
+          "name": "crawl_data_sws_company__industry_average_sws_industry_average_id_sws_industry_average_id_fk",
+          "tableFrom": "crawl_data_sws_company__industry_average",
+          "tableTo": "sws_industry_average",
+          "columnsFrom": [
+            "sws_industry_average_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "crawl_data_sws_screener": {
+      "name": "crawl_data_sws_screener",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "crawled_at": {
+          "name": "crawled_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "crawl_type_specific": {
+          "name": "crawl_type_specific",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "crawl_data_sws_screener_data_at_and_crawl_type": {
+          "name": "crawl_data_sws_screener_data_at_and_crawl_type",
+          "columns": [
+            "crawled_at",
+            "crawl_type_specific"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "crawl_data_sws_screener_result": {
+      "name": "crawl_data_sws_screener_result",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "crawl_data_sws_screener_id": {
+          "name": "crawl_data_sws_screener_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sws_id": {
+          "name": "sws_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_unique_symbol": {
+          "name": "sws_unique_symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "screener_and_position": {
+          "name": "screener_and_position",
+          "columns": [
+            "crawl_data_sws_screener_id",
+            "position"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "crawl_data_sws_screener_result_crawl_data_sws_screener_id_crawl_data_sws_screener_id_fk": {
+          "name": "crawl_data_sws_screener_result_crawl_data_sws_screener_id_crawl_data_sws_screener_id_fk",
+          "tableFrom": "crawl_data_sws_screener_result",
+          "tableTo": "crawl_data_sws_screener",
+          "columnsFrom": [
+            "crawl_data_sws_screener_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "crawl_data_sws_stock_list": {
+      "name": "crawl_data_sws_stock_list",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "crawled_at": {
+          "name": "crawled_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "crawl_type_specific": {
+          "name": "crawl_type_specific",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "crawl_data_sws_stock_list_data_at_and_crawl_type": {
+          "name": "crawl_data_sws_stock_list_data_at_and_crawl_type",
+          "columns": [
+            "crawled_at",
+            "crawl_type_specific"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "crawl_data_sws_stock_list_result": {
+      "name": "crawl_data_sws_stock_list_result",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "crawl_data_sws_stock_list_id": {
+          "name": "crawl_data_sws_stock_list_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_id": {
+          "name": "sws_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_unique_symbol": {
+          "name": "sws_unique_symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "stock_list_and_position": {
+          "name": "stock_list_and_position",
+          "columns": [
+            "crawl_data_sws_stock_list_id",
+            "position"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "crawl_data_sws_stock_list_result_crawl_data_sws_stock_list_id_crawl_data_sws_stock_list_id_fk": {
+          "name": "crawl_data_sws_stock_list_result_crawl_data_sws_stock_list_id_crawl_data_sws_stock_list_id_fk",
+          "tableFrom": "crawl_data_sws_stock_list_result",
+          "tableTo": "crawl_data_sws_stock_list",
+          "columnsFrom": [
+            "crawl_data_sws_stock_list_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "daily_category": {
+      "name": "daily_category",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "data_at": {
+          "name": "data_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_sub_type_id": {
+          "name": "sws_sub_type_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "is_most_parent": {
+          "name": "is_most_parent",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "is_tail": {
+          "name": "is_tail",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "daily_category_data_at_source_and_name": {
+          "name": "daily_category_data_at_source_and_name",
+          "columns": [
+            "data_at",
+            "source",
+            "name"
+          ],
+          "isUnique": true
+        },
+        "daily_category_data_at_slug": {
+          "name": "daily_category_data_at_slug",
+          "columns": [
+            "data_at",
+            "slug"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "daily_category_data_at_day_data_at_fk": {
+          "name": "daily_category_data_at_day_data_at_fk",
+          "tableFrom": "daily_category",
+          "tableTo": "day",
+          "columnsFrom": [
+            "data_at"
+          ],
+          "columnsTo": [
+            "data_at"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "daily_category_parent": {
+      "name": "daily_category_parent",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "daily_category_id": {
+          "name": "daily_category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "daily_category_parent_id": {
+          "name": "daily_category_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "daily_category_parent_category_and_parent": {
+          "name": "daily_category_parent_category_and_parent",
+          "columns": [
+            "daily_category_id",
+            "daily_category_parent_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "daily_category_parent_daily_category_id_daily_category_id_fk": {
+          "name": "daily_category_parent_daily_category_id_daily_category_id_fk",
+          "tableFrom": "daily_category_parent",
+          "tableTo": "daily_category",
+          "columnsFrom": [
+            "daily_category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "daily_category_parent_daily_category_parent_id_daily_category_id_fk": {
+          "name": "daily_category_parent_daily_category_parent_id_daily_category_id_fk",
+          "tableFrom": "daily_category_parent",
+          "tableTo": "daily_category",
+          "columnsFrom": [
+            "daily_category_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "daily_crawl": {
+      "name": "daily_crawl",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "data_at": {
+          "name": "data_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "finished_at": {
+          "name": "finished_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "daily_crawl_data_at_unique": {
+          "name": "daily_crawl_data_at_unique",
+          "columns": [
+            "data_at"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "daily_crawl_data_at_day_data_at_fk": {
+          "name": "daily_crawl_data_at_day_data_at_fk",
+          "tableFrom": "daily_crawl",
+          "tableTo": "day",
+          "columnsFrom": [
+            "data_at"
+          ],
+          "columnsTo": [
+            "data_at"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "daily_crawl_type": {
+      "name": "daily_crawl_type",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "daily_crawl_id": {
+          "name": "daily_crawl_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "crawl_type": {
+          "name": "crawl_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "crawl_type_specific": {
+          "name": "crawl_type_specific",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data_id": {
+          "name": "data_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "daily_crawl_and_crawl_type": {
+          "name": "daily_crawl_and_crawl_type",
+          "columns": [
+            "daily_crawl_id",
+            "crawl_type",
+            "crawl_type_specific"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "daily_crawl_type_daily_crawl_id_daily_crawl_id_fk": {
+          "name": "daily_crawl_type_daily_crawl_id_daily_crawl_id_fk",
+          "tableFrom": "daily_crawl_type",
+          "tableTo": "daily_crawl",
+          "columnsFrom": [
+            "daily_crawl_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "day": {
+      "name": "day",
+      "columns": {
+        "data_at": {
+          "name": "data_at",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "day_data_at_unique": {
+          "name": "day_data_at_unique",
+          "columns": [
+            "data_at"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "sws_industry_average": {
+      "name": "sws_industry_average",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "sws_data_last_updated": {
+          "name": "sws_data_last_updated",
+          "type": "blob",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sws_industry_id": {
+          "name": "sws_industry_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "country_iso": {
+          "name": "country_iso",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value_score": {
+          "name": "value_score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividends_score": {
+          "name": "dividends_score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_performance_score": {
+          "name": "future_performance_score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "health_score": {
+          "name": "health_score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "past_performance_score": {
+          "name": "past_performance_score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "total_score": {
+          "name": "total_score",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "share_price": {
+          "name": "share_price",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "market_cap": {
+          "name": "market_cap",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "intrinsic_discount": {
+          "name": "intrinsic_discount",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "pe": {
+          "name": "pe",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "pb": {
+          "name": "pb",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "peg": {
+          "name": "peg",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_one_year_growth": {
+          "name": "future_one_year_growth",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_three_year_growth": {
+          "name": "future_three_year_growth",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_one_year_roe": {
+          "name": "future_one_year_roe",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_three_year_roe": {
+          "name": "future_three_year_roe",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "past_one_year_growth": {
+          "name": "past_one_year_growth",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "past_five_year_growth": {
+          "name": "past_five_year_growth",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "roe": {
+          "name": "roe",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "roa": {
+          "name": "roa",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_yield": {
+          "name": "dividend_yield",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "future_dividend_yield": {
+          "name": "future_dividend_yield",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "eps": {
+          "name": "eps",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "insider_buying": {
+          "name": "insider_buying",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "debt_equity": {
+          "name": "debt_equity",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "levered_beta": {
+          "name": "levered_beta",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "unlevered_beta": {
+          "name": "unlevered_beta",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "total_base_count": {
+          "name": "total_base_count",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "profitable_count": {
+          "name": "profitable_count",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "analyst_coverage_count": {
+          "name": "analyst_coverage_count",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_count": {
+          "name": "dividend_count",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "beta_count": {
+          "name": "beta_count",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "earnings_per_share_growth_annual": {
+          "name": "earnings_per_share_growth_annual",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "net_income_growth_annual": {
+          "name": "net_income_growth_annual",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cash_ops_growth_annual": {
+          "name": "cash_ops_growth_annual",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "revenue_growth_annual": {
+          "name": "revenue_growth_annual",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "levered_beta_median": {
+          "name": "levered_beta_median",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "base_source": {
+          "name": "base_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "profitable_source": {
+          "name": "profitable_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "analyst_source": {
+          "name": "analyst_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dividend_source": {
+          "name": "dividend_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "beta_source": {
+          "name": "beta_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "sws_industry_average_unique": {
+          "name": "sws_industry_average_unique",
+          "columns": [
+            "sws_data_last_updated",
+            "sws_industry_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}

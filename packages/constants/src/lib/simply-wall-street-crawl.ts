@@ -121,7 +121,7 @@ for (const crawlType of CRAWL_TYPES) {
         specificCrawlType: n.name,
         existingDailyCrawlTypeId: null,
         url: n.url,
-      })
+      }),
     );
   }
   if (crawlType === 'sws_screener') {
@@ -130,7 +130,7 @@ for (const crawlType of CRAWL_TYPES) {
         specificCrawlType: n.name,
         existingDailyCrawlTypeId: null,
         url: n.url,
-      })
+      }),
     );
   }
 }
@@ -178,6 +178,7 @@ export type SwsCrawlCompanyPageDataCrawledEvent = {
   crawl: {
     requestPayload: PuppeteerCrawlRequestPayloadType;
     data: SwsCrawlCompanyPageData;
+    html: string | null;
   };
   companyPage: {
     company: SwsCrawlCompanyPageToCrawlLater;

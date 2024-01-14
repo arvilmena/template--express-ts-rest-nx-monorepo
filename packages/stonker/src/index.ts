@@ -16,6 +16,7 @@ import {
   DailyCrawlRepository,
   DailyCrawlTypeRepository,
   DayRepository,
+  SwsIndustryAverageRepository,
 } from '@myawesomeorg/db';
 import { DailyCrawlFileSystem, FileSystem } from '@myawesomeorg/file-system';
 import EventEmitter2 from 'eventemitter2';
@@ -67,6 +68,12 @@ const crawlDataSwsCompanyCategoryRepository =
     dayRepository,
     dailyCategoryRepository,
   );
+const swsIndustryAverageRepository = new SwsIndustryAverageRepository();
+
+const swsCompanyPageDataService = new SimplyWallStreetCompanyPageDataService(
+  crawlDataSwsCompanyRepository,
+  swsIndustryAverageRepository,
+);
 
 const eventEmitter = new EventEmitter2(eventEmitterConfig);
 const fileSystem = new FileSystem(StonkerConfig.APP_ROOT_DIR_ABSPATH);
@@ -96,14 +103,11 @@ new StonkerEvents(
   crawlDataSwsCompanyCategoryRepository,
   dailyCategoryParentRepository,
   crawler,
+  swsCompanyPageDataService,
 );
 
 const dailyCrawlFiles = new DailyCrawlFileSystem(
   StonkerConfig.APP_ROOT_DIR_ABSPATH,
-);
-
-const swsCompanyPageDataService = new SimplyWallStreetCompanyPageDataService(
-  crawlDataSwsCompanyRepository,
 );
 
 export {
@@ -121,5 +125,7 @@ export {
   dailyCrawlTypeRepository,
   dayRepository,
   puppeteerService,
+  simplyWallStreetCrawler,
   swsCompanyPageDataService,
+  swsIndustryAverageRepository,
 };

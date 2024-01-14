@@ -25,17 +25,45 @@ const dailyCategorySelectWith = {
 export class DailyCategoryRepository {
   constructor(private readonly dayRepository: DayRepository) {}
 
+  async findBySwsIndustryAverage({
+    dataAt,
+    swsSubTypeId,
+  }: {
+    swsSubTypeId: number;
+    dataAt: DateTime;
+  }) {
+    return await db.query.dailyCategory.findFirst({
+      where: (dailyCategory, { eq, and }) =>
+        and(
+          eq(dailyCategory.swsSubTypeId, swsSubTypeId),
+          eq(dailyCategory.source, 'sws'),
+          eq(dailyCategory.dataAt, dataAt),
+        ),
+      with: dailyCategorySelectWith,
+    });
+  }
+
   async getAllMostParentByLuxonDate(luxon: DateTime) {
     const correctDateFormat = manilaLuxonDateToCrawlDataAtFormat(luxon);
     return await db.query.dailyCategory.findMany({
       where: (dailyCategory, { eq, and }) =>
         and(
           eq(dailyCategory.dataAt, correctDateFormat),
-          eq(dailyCategory.isMostParent, true)
+          eq(dailyCategory.isMostParent, true),
         ),
       with: dailyCategorySelectWith,
     });
   }
+
+  async getAllByLuxonDate(luxon: DateTime) {
+    const correctDateFormat = manilaLuxonDateToCrawlDataAtFormat(luxon);
+    return await db.query.dailyCategory.findMany({
+      where: (dailyCategory, { eq, and }) =>
+        and(eq(dailyCategory.dataAt, correctDateFormat)),
+      with: dailyCategorySelectWith,
+    });
+  }
+
   async findByLuxonAndSlug({
     dataAt,
     slug,
@@ -58,7 +86,7 @@ export class DailyCategoryRepository {
   }
 
   async createOne(
-    data: Omit<z.infer<typeof insertDailyCategorySchema>, 'slug'>
+    data: Omit<z.infer<typeof insertDailyCategorySchema>, 'slug'>,
   ) {
     const { dataAt, name, source } = data;
     const correctDateFormat = manilaLuxonDateToCrawlDataAtFormat(dataAt);
@@ -76,7 +104,7 @@ export class DailyCategoryRepository {
       where: (dailyCategory, { eq, and }) =>
         and(
           eq(dailyCategory.dataAt, correctDateFormat),
-          eq(dailyCategory.slug, slug)
+          eq(dailyCategory.slug, slug),
         ),
       with: dailyCategorySelectWith,
     });

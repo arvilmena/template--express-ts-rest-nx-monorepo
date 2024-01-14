@@ -4,8 +4,8 @@
     "outDir": "../../dist/out-tsc",
     "declaration": true,
     "types": ["node", "@total-typescript/ts-reset"],
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true // puppeteer-extra-plugin-stealth
   },
   "include": ["src/**/*.ts", "./reset.d.ts"],

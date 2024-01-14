@@ -1,5 +1,13 @@
 ---
 import {
+cleanFloatingNumber,
+  dayUrlParamStringToLuxon,
+  getCurrentManilaDate,
+  luxonToManilaSqlFormat,
+} from '@myawesomeorg/utils';
+
+
+import {
   InferGetStaticParamsType,
   InferGetStaticPropsType,
   GetStaticPaths,
@@ -15,43 +23,209 @@ export const getStaticPaths = (async () => {
   });
 }) satisfies GetStaticPaths;
 
-import { dayRepository, dailyCategoryRepository } from '@stonker/stonker';
-import Layout from '../../layouts/base/Layout.astro';
 import {
-  dayUrlParamStringToLuxon,
-  getCurrentManilaDate,
-  luxonToManilaSqlFormat,
-} from '@myawesomeorg/utils';
-import { dailyCategoryToHumanReadable } from '@myawesomeorg/db';
+  dayRepository,
+  dailyCategoryRepository,
+  swsIndustryAverageRepository,
+} from '@stonker/stonker';
+import Layout from '../../layouts/base/Layout.astro';
+import { dailyCategoryToHumanReadable, type DailyCategoryRepositoryFindOneReturnType } from '@myawesomeorg/db';
+import { DateTime } from 'luxon';
+import { MANILA_TIMEZONE } from '@myawesomeorg/constants';
 const days = await dayRepository.findAmount(365);
 const now = getCurrentManilaDate();
 
 const { dayUrlParamString } = Astro.params;
-const categories = await dailyCategoryRepository.getAllMostParentByLuxonDate(
-  dayUrlParamStringToLuxon(dayUrlParamString),
+const dayUrlParamLuxon = dayUrlParamStringToLuxon(dayUrlParamString);
+const categories =
+  await dailyCategoryRepository.getAllMostParentByLuxonDate(dayUrlParamLuxon);
+const swsIndustryAverages =
+  await swsIndustryAverageRepository.getIndustryAveragesForDayByLuxon(
+    dayUrlParamLuxon,
+  );
+
+// let swsIndustryAveragesExtended : (typeof swsIndustryAverages & {isOlderThan2Weeks: boolean, lastUpdatedLuxon: DateTime, dailyCategory: DailyCategoryRepositoryFindOneReturnType | undefined })[]
+
+const swsIndustryAveragesExtended = await Promise.all(
+  swsIndustryAverages.map(async (c) => {
+  const lastUpdatedLuxon = DateTime.fromMillis(
+    Number(c.swsDataLastUpdated),
+  );
+  const isOlderThan2Weeks =
+    dayUrlParamLuxon.toMillis() - lastUpdatedLuxon.toMillis() >=
+    1_209_600_000;
+  return {
+    ...c,
+    isOlderThan2Weeks,
+    lastUpdatedLuxon,
+    dailyCategory: await dailyCategoryRepository.findBySwsIndustryAverage({dataAt: dayUrlParamLuxon, swsSubTypeId: c.industryId})}
+  })
 );
 ---
 
 <Layout
+fullWidth={true}
   title={`${dayUrlParamString}`}
   breadcrumb={[
     { title: 'Days', url: '/' },
     { title: dayUrlParamString, url: `/days/${dayUrlParamString}` },
   ]}
 >
+
+    <h1>All Stocks</h1>
+    <p>Compare all stocks:
+    <a href={`/days/${dayUrlParamString}/stocks/all`}>All Stocks</a></p>
   {
     categories.length > 0 && (
-      <ol>
-        {categories.map((c) => {
-          return (
-            <li>
-              <a href={`/days/${dayUrlParamString}/categories/${c.slug}`}>
-                {dailyCategoryToHumanReadable(c)}
-              </a>
-            </li>
-          );
-        })}
-      </ol>
+      <>
+        <h1>Categories</h1>
+        <p>Categories, Industries and Sectors</p>
+        <ol>
+          {categories.map((c) => {
+            return (
+              <li>
+                <a href={`/days/${dayUrlParamString}/categories/${c.slug}`}>
+                  {dailyCategoryToHumanReadable(c)}
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </>
+    )
+  }
+  {
+    swsIndustryAveragesExtended.length > 0 && (
+      <>
+        <h1>Industries</h1>
+        <p>PH Market, Industries</p>
+        <button id="getDetails" class="inline-flex w-full justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">Get Current Search builder query</button>
+        <div id="getDetailsQuery"></div>
+        <table id="myTable" class="display w-full">
+          <thead>
+            <tr>
+                  <th>name</th>
+                  <th>last_updated</th>
+                  <th>countryIso</th>
+                  <th>valueScore</th>
+                  <th>intrinsicDiscount</th>
+                  <th>futurePerformanceScore</th>
+                  <th>futureOneYearGrowth</th>
+                  <th>futureThreeYearGrowth</th>
+                  <th>futureDividendYield</th>
+                  <th>dividendsScore</th>
+                  <th>healthScore</th>
+                  <th>pastPerformanceScore</th>
+                  <th>totalScore</th>
+                  <th>PE</th>
+                  <th>PB</th>
+                  <th>PEG</th>
+                  <th>pastOneYearGrowth</th>
+                  <th>pastFiveYearGrowth</th>
+                  <th>futureOneYearROE</th>
+                  <th>futureThreeYearROE</th>
+                  <th>ROE</th>
+                  <th>ROA</th>
+                  <th>dividendYield</th>
+                  <th>EPS</th>
+                  <th>analystCoverageCount</th>
+                  <th>earningsPerShareGrowthAnnual</th>
+                  <th>netIncomeGrowthAnnual</th>
+                  <th>cashOpsGrowthAnnual</th>
+                  <th>revenueGrowthAnnual</th>
+            </tr>
+          </thead>
+          <tbody>
+            {swsIndustryAveragesExtended.map((c) => {
+              return (
+                <tr
+                  class:list={[
+                    {
+                      'opacity-50': c.isOlderThan2Weeks,
+                    },
+                  ]}
+                >
+                  <td><a href={`/days/${dayUrlParamString}/categories/${c.dailyCategory?.slug}`}>{c.name}</a></td>
+                  <td>
+                    {luxonToManilaSqlFormat(c.lastUpdatedLuxon)}<br />
+                    {`${
+                      c.isOlderThan2Weeks ? `(Data is older than 2 weeks)` : ''
+                    }`}
+                  </td>
+                  <td>{c.countryIso}</td>
+                  <td>{c.valueScore?.toCleanFloatingNumber()}</td>
+                  <td>{c.intrinsicDiscount?.toCleanFloatingNumber()}</td>
+                  <td>{c.futurePerformanceScore?.toCleanFloatingNumber()}</td>
+                  <td>{c.futureOneYearGrowth?.toCleanFloatingNumber()}</td>
+                  <td>{c.futureThreeYearGrowth?.toCleanFloatingNumber()}</td>
+                  <td>{c.futureDividendYield?.toCleanFloatingNumber()}</td>
+                  <td>{c.dividendsScore?.toCleanFloatingNumber()}</td>
+                  <td>{c.healthScore?.toCleanFloatingNumber()}</td>
+                  <td>{c.pastPerformanceScore?.toCleanFloatingNumber()}</td>
+                  <td>{c.totalScore?.toCleanFloatingNumber()}</td>
+                  <td>{c.PE?.toCleanFloatingNumber()}</td>
+                  <td>{c.PB?.toCleanFloatingNumber()}</td>
+                  <td>{c.PEG?.toCleanFloatingNumber()}</td>
+                  <td>{c.pastOneYearGrowth?.toCleanFloatingNumber()}</td>
+                  <td>{c.pastFiveYearGrowth?.toCleanFloatingNumber()}</td>
+                  <td>{c.futureOneYearROE?.toCleanFloatingNumber()}</td>
+                  <td>{c.futureThreeYearROE?.toCleanFloatingNumber()}</td>
+                  <td>{c.ROE?.toCleanFloatingNumber()}</td>
+                  <td>{c.ROA?.toCleanFloatingNumber()}</td>
+                  <td>{c.dividendYield?.toCleanFloatingNumber()}</td>
+                  <td>{c.EPS?.toCleanFloatingNumber()}</td>
+                  <td>{c.analystCoverageCount?.toCleanFloatingNumber()}</td>
+                  <td>{c.earningsPerShareGrowthAnnual?.toCleanFloatingNumber()}</td>
+                  <td>{c.netIncomeGrowthAnnual?.toCleanFloatingNumber()}</td>
+                  <td>{c.cashOpsGrowthAnnual?.toCleanFloatingNumber()}</td>
+                  <td>{c.revenueGrowthAnnual?.toCleanFloatingNumber()}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <script is:inline>
+          $(document).ready(function () {
+            $('#myTable').DataTable({
+              paging: false,
+              fixedColumns: { left: 1 },
+              colReorder: { enable: true },
+              fixedHeader: {
+                header: true,
+              },
+              dom: 'Qlfrtip',
+              searchBuilder: {
+                preDefined: {
+                  "criteria": [
+                    {
+                      "condition": ">",
+                      "data": "futureOneYearGrowth",
+                      "type": "num",
+                      "value": [
+                        "0"
+                      ]
+                    },
+                    {
+                      "condition": ">",
+                      "data": "futureThreeYearGrowth",
+                      "type": "num",
+                      "value": [
+                        "0"
+                      ]
+                    }
+                  ],
+                  "logic": "AND"
+                }
+              }
+            });
+
+            $('#getDetails').on('click', function() {
+              stored = $('#myTable').DataTable().searchBuilder.getDetails();
+                $('#getDetailsQuery').text(JSON.stringify(stored, null, '\t'));
+            })
+          });
+        </script>
+      </>
     )
   }
 </Layout>

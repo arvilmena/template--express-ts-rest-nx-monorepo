@@ -13,3 +13,4 @@ export * from './repositories/daily-category.repository';
 export * from './repositories/daily-crawl-type.repository';
 export * from './repositories/daily-crawl.repository';
 export * from './repositories/day.repository';
+export * from './repositories/sws-industry-average.repository';

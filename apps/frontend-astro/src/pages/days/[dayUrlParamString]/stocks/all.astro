@@ -5,26 +5,18 @@ import {
   GetStaticPaths,
 } from 'astro';
 import { cleanFloatingNumber } from '@myawesomeorg/utils';
-
 export const getStaticPaths = (async () => {
   const days = await dayRepository.findAmount(365);
   const r = await Promise.all(
     days.map(async (d) => {
       const dayUrlParamString = luxonToManilaSqlFormat(d.dataAt);
-      const categories = await dailyCategoryRepository.getAllByLuxonDate(
-        dayUrlParamStringToLuxon(dayUrlParamString),
-      );
-      return categories.map((category) => {
-        return {
-          params: { dayUrlParamString, categorySlug: category.slug },
-          props: { dayUrlParamString, category },
-        };
-      });
+      return {
+        params: { dayUrlParamString },
+      };
     }),
   );
   return r.flatMap((x) => x);
 }) satisfies GetStaticPaths;
-
 import {
   dayRepository,
   dailyCategoryRepository,
@@ -38,34 +30,30 @@ import {
 } from '@myawesomeorg/utils';
 import { dailyCategoryToHumanReadable } from '@myawesomeorg/db';
 import { DateTime } from 'luxon';
-import CompanyDataTable from 'apps/frontend-astro/src/components/CompanyDataTable.astro';
-const { params, props } = Astro;
-const { dayUrlParamString, categorySlug } = params;
-const { category } = props;
-const categoryName = category
-  ? dailyCategoryToHumanReadable(category, false)
-  : '';
+import CompanyDataTable from '../../../../components/CompanyDataTable.astro';
+const { dayUrlParamString } = Astro.params;
 
-const swsCompanies = !category
-  ? []
-  : await crawlDataSwsCompanyRepository.findAllUnderCategory({
-      categoryId: category.id as number,
-    });
+const swsCompanies = await crawlDataSwsCompanyRepository.getForDayByLuxon(
+  dayUrlParamStringToLuxon(dayUrlParamString),
+);
 ---
 
 <Layout
-  title={`${categoryName} - ${dayUrlParamString}`}
+  title={`All Stocks - ${dayUrlParamString}`}
   breadcrumb={[
     { title: 'Days', url: '/' },
     { title: dayUrlParamString, url: `/days/${dayUrlParamString}` },
-    { title: 'Categories', url: null },
-    { title: categoryName, url: category?.slug },
+    { title: 'Stocks', url: null },
+    { title: 'All', url: `/days/${dayUrlParamString}/stocks/all` },
   ]}
   fullWidth={true}
 >
-  {category && <h1>{dailyCategoryToHumanReadable(category, false)}</h1>}
+  <!-- {category && <h1>{dailyCategoryToHumanReadable(category, false)}</h1>} -->
 
+  <!-- <pre>{JSON.stringify(Object.keys(swsCompanies.toQuery), null, 2)}</pre> -->
   <!-- <pre>{JSON.stringify(swsCompanies, null, 2)}</pre> -->
+
+  <!-- <pre>{dayUrlParamString} => {dayUrlParamStringToLuxon(dayUrlParamString).toMillis()}</pre> -->
   <CompanyDataTable companies={swsCompanies} />
 
   <!-- <button

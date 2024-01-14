@@ -1,5 +1,9 @@
 import { SwsCrawlCompanyPageData } from '@myawesomeorg/constants';
-import { CrawlDataSwsCompanyRepository } from '@myawesomeorg/db';
+import {
+  CrawlDataSwsCompanyRepository,
+  SwsIndustryAverageRepository,
+  SwsIndustryAverageRepositoryCreateOneType,
+} from '@myawesomeorg/db';
 import { luxonToManilaSqlFormat, slugify } from '@myawesomeorg/utils';
 import { DateTime } from 'luxon';
 import { dailyCrawlFiles } from './../../../index';
@@ -7,7 +11,57 @@ import { dailyCrawlFiles } from './../../../index';
 export class SimplyWallStreetCompanyPageDataService {
   constructor(
     private readonly crawlDataSwsCompanyRepository: CrawlDataSwsCompanyRepository,
+    private readonly swsIndustryAverageRepository: SwsIndustryAverageRepository,
   ) {}
+
+  async saveCompanyData(companyData: SwsCrawlCompanyPageData['data']) {
+    // get the sws crawl company
+    const swsId = companyData.id;
+    const swsDataLastUpdated = BigInt(companyData.last_updated);
+
+    const swsCompany =
+      await this.crawlDataSwsCompanyRepository.findBySwsIdAndLastUpdated({
+        swsId,
+        swsDataLastUpdated,
+      });
+    if (!swsCompany) {
+      return `SWS Company for swsId: ${swsId} and swsDataLastUpdated: ${swsDataLastUpdated} not found!`;
+    }
+
+    const rawIndustryAverages =
+      companyData.analysis.data.extended.data.industry_averages;
+    if (!rawIndustryAverages) return null;
+
+    const { all: market, ...sector } = rawIndustryAverages;
+
+    const savedIndustryAverages = async (
+      d:
+        | (typeof rawIndustryAverages)['all']
+        | Omit<typeof rawIndustryAverages, 'all'>,
+    ) => {
+      const _marketValues = {
+        ...(d as Omit<
+          SwsIndustryAverageRepositoryCreateOneType,
+          'swsDataLastUpdated'
+        >),
+        swsDataLastUpdated: BigInt(companyData.last_updated),
+      } satisfies SwsIndustryAverageRepositoryCreateOneType;
+
+      return await this.swsIndustryAverageRepository.createOneAndAttachToSwsCompany(
+        _marketValues,
+        swsCompany.id,
+      );
+    };
+
+    let savedMarket: Awaited<ReturnType<typeof savedIndustryAverages>> | null =
+      null;
+    if (market) {
+      savedMarket = await savedIndustryAverages(market);
+    }
+    const savedSector = await savedIndustryAverages(sector);
+
+    return { rawIndustryAverages, savedMarket, savedSector };
+  }
 
   async recrawlCompanyPageDataFromFile(dataAt: DateTime, uniqueSymbol: string) {
     let contents: string | null = null;
@@ -25,26 +79,12 @@ export class SimplyWallStreetCompanyPageDataService {
     if (null === contents) {
       return {};
     }
-    const companyData = JSON.parse(contents) as {
+    const companyDataRaw = JSON.parse(contents) as {
       crawl: { data: SwsCrawlCompanyPageData };
     };
 
-    // get the sws crawl company
-    const swsId = companyData.crawl.data.data.id;
-    const swsDataLastUpdated = BigInt(companyData.crawl.data.data.last_updated);
+    const companyData = companyDataRaw.crawl.data.data;
 
-    const swsCompany =
-      await this.crawlDataSwsCompanyRepository.findBySwsIdAndLastUpdated({
-        swsId,
-        swsDataLastUpdated,
-      });
-    if (!swsCompany) {
-      return `SWS Company for swsId: ${swsId} and swsDataLastUpdated: ${swsDataLastUpdated} not found!`;
-    }
-
-    const rawIndustryAverages =
-      companyData.crawl.data.data.analysis.data.extended.data.industry_averages;
-
-    return rawIndustryAverages;
+    return await this.saveCompanyData(companyData);
   }
 }
