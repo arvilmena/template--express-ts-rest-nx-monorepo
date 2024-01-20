@@ -1,0 +1,1 @@
+ALTER TABLE crawl_data_sws_company ADD `future_cash_ops_growth_annual` real;

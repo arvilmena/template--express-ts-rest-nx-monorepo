@@ -9,14 +9,14 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 export class PuppeteerService {
   constructor(private readonly fileSystem: FileSystem) {}
 
-  async getCookie(): Promise<Protocol.Network.CookieParam[]> {
+  async getCookie(): Promise<Protocol.Network.CookieParam[] | null> {
     return this.fileSystem.puppeteerCookie.getCookie();
   }
 
   async saveCurrentCookies(cdt: CDPSession) {
     // console.log(`> saving cookies...`);
     return this.fileSystem.puppeteerCookie.replaceCookie(
-      (await cdt.send('Network.getAllCookies')).cookies
+      (await cdt.send('Network.getAllCookies')).cookies,
     );
   }
   async openBrowser() {
@@ -69,11 +69,12 @@ export class PuppeteerService {
     };
     if (processArg0IsPuppeteer(browserProcess.arg0) === false) {
       throw new Error(
-        `Browser process ${browserProcess.arg0} doesnt look to be chrome`
+        `Browser process ${browserProcess.arg0} doesnt look to be chrome`,
       );
     }
     const page = await browser.newPage();
-    await page.setCookie(...(await this.getCookie()));
+    const cookies = await this.getCookie();
+    if (cookies) await page.setCookie(...cookies);
     const cdt = await page.target().createCDPSession();
     // minimize window
     const { windowId } = await cdt.send('Browser.getWindowForTarget');

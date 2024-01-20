@@ -1,0 +1,104 @@
+---
+import { CrawlDataSwsCompanyFindAllUnderCategoryReturnType } from '@myawesomeorg/db';
+
+interface Props {
+  companies: CrawlDataSwsCompanyFindAllUnderCategoryReturnType;
+}
+
+const { companies } = Astro.props;
+---
+
+{
+  companies.map((c) => {
+    return (
+      <div id={`tooltip-${c.crawl_data_sws_company.swsId}`} class="hidden">
+        <div class="relative overflow-x-auto">
+          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr class="">
+                <th scope="col" class="px-6 py-3">
+                  Title
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 break-word text-pretty max-w-[320px]"
+                >
+                  Description
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Severity
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  State
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {c.statements
+                .filter(
+                  (s) =>
+                    s.swsCompanyStatement &&
+                    (s.swsCompanyStatement.severity === 'major' ||
+                      [
+                        'Has Been Growing Profit Or Revenue',
+                        'PE vs Industry',
+                        'PE vs Market',
+                        'Price-To-Earnings vs Peers',
+                      ].includes(s.swsCompanyStatement.title)),
+                )
+                .map((s) => {
+                  return (
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <th
+                        scope="row"
+                        class="break-word text-pretty max-w-[180px] px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {s.swsCompanyStatement?.title}
+                      </th>
+                      <td class="px-6 py-4 break-word text-pretty max-w-[320px]">
+                        {s.swsCompanyStatement?.description}
+                      </td>
+                      <td class="px-6 py-4">
+                        {s.swsCompanyStatement?.severity}
+                      </td>
+                      <td class="px-6 py-4">
+                        {' '}
+                        {'pass' === s.swsCompanyStatement?.state && (
+                          <iconify-icon
+                            icon="bi:check"
+                            class="text-xl text-green-500"
+                          />
+                        )}
+                        {'fail' === s.swsCompanyStatement?.state && (
+                          <iconify-icon
+                            icon="bi:x"
+                            class="text-xl text-red-500"
+                          />
+                        )}
+                        {['PE vs Market', 'PE vs Industry'].includes(
+                          s.swsCompanyStatement?.title ?? '',
+                        ) &&
+                          s.swsCompanyStatement?.description.includes(
+                            'poor',
+                          ) && (
+                            <iconify-icon
+                              icon="bi:x"
+                              class="text-xl text-red-500"
+                            />
+                          )}
+                        {!['fail', 'pass'].includes(
+                          s.swsCompanyStatement?.state ?? '',
+                        ) && (
+                          <Fragment>{s.swsCompanyStatement?.state}</Fragment>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  })
+}

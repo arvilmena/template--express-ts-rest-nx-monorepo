@@ -17,13 +17,24 @@ export class PuppeteerCookie {
     this._puppeteerCookieStorage = new FileStorage(
       new LocalStorageAdapter(this._puppeteerCookieDirectory),
     );
+    if (!this._puppeteerCookieStorage.fileExists(this._cookieFileName)) {
+      this._puppeteerCookieStorage.write(
+        this._cookieFileName,
+        JSON.stringify({}, null, 2),
+      );
+    }
   }
 
-  async getCookie(): Promise<Protocol.Network.CookieParam[]> {
-    const contents = await this._puppeteerCookieStorage.readToString(
-      this._cookieFileName,
-    );
-    return JSON.parse(contents) as Protocol.Network.CookieParam[];
+  async getCookie(): Promise<Protocol.Network.CookieParam[] | null> {
+    try {
+      const contents = await this._puppeteerCookieStorage.readToString(
+        this._cookieFileName,
+      );
+      if (!contents || contents.length === 0) return null;
+      return JSON.parse(contents) as Protocol.Network.CookieParam[];
+    } catch (error) {
+      return null;
+    }
   }
 
   async replaceCookie(cookies: Protocol.Network.Cookie[]) {

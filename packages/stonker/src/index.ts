@@ -16,6 +16,7 @@ import {
   DailyCrawlRepository,
   DailyCrawlTypeRepository,
   DayRepository,
+  SwsCompanyStatementRepository,
   SwsIndustryAverageRepository,
 } from '@myawesomeorg/db';
 import { DailyCrawlFileSystem, FileSystem } from '@myawesomeorg/file-system';
@@ -58,7 +59,6 @@ const crawlDataSwsStockListResultRepository =
 const crawlDataSwsScreenerRepository = new CrawlDataSwsScreenerRepository();
 const crawlDataSwsScreenerResultRepository =
   new CrawlDataSwsScreenerResultRepository();
-const crawlDataSwsCompanyRepository = new CrawlDataSwsCompanyRepository();
 const crawlDataSwsCompanyFreeCashFlowRepository =
   new CrawlDataSwsCompanyFreeCashFlowRepository();
 const dailyCategoryRepository = new DailyCategoryRepository(dayRepository);
@@ -69,10 +69,15 @@ const crawlDataSwsCompanyCategoryRepository =
     dailyCategoryRepository,
   );
 const swsIndustryAverageRepository = new SwsIndustryAverageRepository();
+const swsCompanyStatementRepository = new SwsCompanyStatementRepository();
+const crawlDataSwsCompanyRepository = new CrawlDataSwsCompanyRepository(
+  swsCompanyStatementRepository,
+);
 
 const swsCompanyPageDataService = new SimplyWallStreetCompanyPageDataService(
   crawlDataSwsCompanyRepository,
   swsIndustryAverageRepository,
+  swsCompanyStatementRepository,
 );
 
 const eventEmitter = new EventEmitter2(eventEmitterConfig);
@@ -127,5 +132,6 @@ export {
   puppeteerService,
   simplyWallStreetCrawler,
   swsCompanyPageDataService,
+  swsCompanyStatementRepository,
   swsIndustryAverageRepository,
 };

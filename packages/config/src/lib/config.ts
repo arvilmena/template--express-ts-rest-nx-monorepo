@@ -18,4 +18,11 @@ if (!parsedConfig.success) {
   throw new Error(JSON.stringify(parsedConfig.error, null, 2));
 }
 
-export const StonkerConfig = parsedConfig.data;
+export const StonkerConfig = {
+  ...parsedConfig.data,
+  // TODO: enable turso local replica
+  // LOCAL_SQLITE_DB_FILE_PATH: path.join(
+  //   parsedConfig.data.APP_ROOT_DIR_ABSPATH,
+  //   'local.sqlite.db',
+  // ),
+};

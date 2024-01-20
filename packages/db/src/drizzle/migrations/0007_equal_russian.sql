@@ -1,0 +1,1 @@
+CREATE INDEX `severity_idx` ON `sws_company_statement` (`severity`);

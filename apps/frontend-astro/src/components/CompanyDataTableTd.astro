@@ -1,28 +1,111 @@
 ---
+import { percentChange } from '@myawesomeorg/utils';
+
 interface Props {
   value: number | null;
   compare?:
     | undefined
-    | { vs: number | null; operator: '<' | '>' | '>=' | '=<' | '==' };
+    | {
+        vs?: number | null;
+        operator?: '<' | '>' | '>=' | '=<' | '==' | 'between';
+        showPercentDifference?: { initial: 'value' | 'vs' } | undefined;
+        sortViaPercentDifference?: boolean;
+        betweenInitial?: number;
+        betweenFinal?: number;
+      };
+  isPercentage?: boolean;
 }
 
-const { value, compare } = Astro.props;
+const { isPercentage, value, compare } = Astro.props;
+const vs = compare?.vs ?? null;
+const operator = compare?.operator ?? '>';
+const showPercentDifference = compare?.showPercentDifference ?? false;
 let isGreen = false;
 let isRed = false;
+let percentDifference = 0;
+if (vs !== null) {
+  isGreen = (value ?? 0) > vs;
+  isRed = (value ?? 0) < vs;
+}
 
-if (!compare) {
-  isGreen = (value ?? 0) > 0;
-  isRed = (value ?? 0) < 0;
+if (vs && operator) {
+  switch (operator) {
+    case '<':
+      isGreen = (value ?? 0) < (vs ?? 0);
+      isRed = (value ?? 0) > (vs ?? 0);
+      break;
+    case '>':
+      isGreen = (value ?? 0) > (vs ?? 0);
+      isRed = (value ?? 0) < (vs ?? 0);
+      break;
+    case '>=':
+      isGreen = (value ?? 0) >= (vs ?? 0);
+      isRed = (value ?? 0) < (vs ?? 0);
+      break;
+    case '=<':
+      isGreen = (value ?? 0) <= (vs ?? 0);
+      isRed = (value ?? 0) > (vs ?? 0);
+      break;
+    case '==':
+      isGreen = (value ?? 0) === (vs ?? 0);
+      isRed = (value ?? 0) !== (vs ?? 0);
+      break;
+    default:
+      break;
+  }
+}
+if (operator === 'between') {
+  isGreen =
+    (value ?? 0) > (compare?.betweenInitial ?? 0) &&
+    (value ?? 0) < (compare?.betweenFinal ?? 0);
+  isRed =
+    (value ?? 0) < (compare?.betweenInitial ?? 0) ||
+    (value ?? 0) > (compare?.betweenFinal ?? 0);
+}
+if (value !== null && vs !== null && showPercentDifference) {
+  const { initial: whatIsInitial } = showPercentDifference;
+  const initial = whatIsInitial === 'vs' ? vs : value;
+  const final = whatIsInitial === 'vs' ? value : vs;
+  percentDifference = percentChange(initial, final) ?? 0;
+}
+const percentDifferenceDisplay =
+  compare?.showPercentDifference && value !== null && compare?.vs
+    ? `(${percentDifference.toFixed(2)}%)`
+    : '';
+
+let displayValue = value?.toCleanFloatingNumber();
+if (isPercentage && value !== null) {
+  displayValue = `${(Number(value) * 100).toCleanFloatingNumber()}%`;
+}
+
+let sortWith = value ?? 0;
+if (compare?.sortViaPercentDifference) {
+  sortWith = percentDifference;
 }
 ---
 
 <td
+  data-order={sortWith}
   class:list={[
+    'text-center w-full',
     {
-      'text-green-600': isGreen,
-      'text-red-600': isRed,
+      'text-green-600': isGreen && !Astro.slots.has('default'),
+      'text-red-600': isRed && !Astro.slots.has('default'),
     },
   ]}
 >
-  {value?.toCleanFloatingNumber()}
+  {Astro.slots.has('default') && <slot />}
+  {
+    !Astro.slots.has('default') && (
+      <Fragment>
+        {displayValue}
+        {percentDifferenceDisplay && (
+          <Fragment>
+            <br />
+            {percentDifferenceDisplay}
+          </Fragment>
+        )}
+      </Fragment>
+    )
+  }
 </td>

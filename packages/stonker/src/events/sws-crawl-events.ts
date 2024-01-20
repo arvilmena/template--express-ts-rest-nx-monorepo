@@ -153,6 +153,8 @@ export class StonkerEvents {
       sharePrice: companyData.analysis.data.share_price,
       pe: companyData.analysis.data.pe,
       ps: companyData.analysis.data.extended.data.analysis.value.price_to_sales,
+      pb: companyData.analysis.data.extended.data.analysis.value.pb,
+      peg: companyData.analysis.data.extended.data.analysis.value.peg,
       priceTarget:
         companyData.analysis.data.extended.data.analysis.value.price_target,
       priceTargetAnalystCount:
@@ -176,6 +178,9 @@ export class StonkerEvents {
       psForward1y:
         companyData.analysis.data.extended.data.analysis.future
           .forward_price_to_sales_1y,
+      cashOpsGrowthAnnual:
+        companyData.analysis.data.extended.data.analysis.future
+          .cash_ops_growth_annual,
       peerPreferredComparison: companyData.analysis.data.preferred_multiple,
       peerPreferredValue:
         companyData.analysis.data
@@ -315,9 +320,11 @@ export class StonkerEvents {
     /** Save Company data */
     // TODO: all the logic above should be
     //  moved to the SimplyWallStreetCompanyPageDataService
-    await this.simplyWallStreetCompanyPageDataService.saveCompanyData(
+    const { html } = event.crawl;
+    await this.simplyWallStreetCompanyPageDataService.saveCompanyData({
       companyData,
-    );
+      html,
+    });
     /** Save Company data ends */
 
     // attach dataId to dailyCrawlType if defined

@@ -6,7 +6,6 @@ import { myTsRestContract } from '@myawesomeorg/ts-rest';
 import {
   dayUrlParamStringToLuxon,
   getCurrentManilaDate,
-  trimWordFromBeginning,
 } from '@myawesomeorg/utils';
 import {
   crawler,
@@ -18,12 +17,19 @@ import { ResponseValidationError } from '@ts-rest/core';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { generateOpenApi } from '@ts-rest/open-api';
 import * as bodyParser from 'body-parser';
-import * as cheerio from 'cheerio';
 import express, { NextFunction, Request, Response } from 'express';
 import * as path from 'path';
 import * as swaggerUi from 'swagger-ui-express';
 import cors = require('cors');
-import fs = require('fs/promises');
+
+declare global {
+  interface BigInt {
+    toJSON(): string;
+  }
+}
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
 
 const app = express();
 
@@ -87,54 +93,6 @@ app.get('/start-daily-crawl', async (_req: Request, res: Response) => {
   res.json(d);
 });
 
-app.get('/parse-test-html', async (_req: Request, res: Response) => {
-  // read the contents of the ./test.html
-  // nodejs read file exampl
-  // read file contents
-  const contents = await fs.readFile(
-    '/Users/arvil/Projects/stonkerino/test.html',
-    { encoding: 'utf8' },
-  );
-  const $ = cheerio.load(contents);
-  const el = [...$('script')].find((e) => {
-    const _e = $(e).text();
-    return (
-      _e.includes('window.__REACT_QUERY_STATE__') && _e.includes('"mutations":')
-    );
-  });
-  const scriptTag = $(el)?.text() ?? '';
-  const jsonObj = trimWordFromBeginning(
-    scriptTag,
-    'window.__REACT_QUERY_STATE__ =',
-  ).trim();
-  let swsReactQueryState: { queries: unknown } | undefined = eval(
-    '(' + jsonObj + ')',
-  );
-  const queries = swsReactQueryState?.queries ?? null;
-
-  const data =
-    (
-      queries as {
-        queryKey: string[];
-        state: {
-          data: {
-            symbol: string;
-            statements: { data: { outcome_name: string }[] };
-          };
-        };
-      }[]
-    ).find((n) => n.queryKey[0] === 'COMPANY_STATEMENTS_API')?.state?.data ??
-    null;
-  if (data?.symbol !== 'PSE:FB') {
-    throw new Error('Invalid data');
-  }
-  swsReactQueryState = undefined;
-  const statements = (data?.statements?.data ?? []).filter(
-    (n) => n?.outcome_name !== 'OUTCOME_NULL',
-  );
-  // const swsReduxState = JSON.parse(jsonObj);
-  res.send(statements);
-});
 app.get('/debug', async (_req: Request, res: Response) => {
   const { browser } = await puppeteerService.openBrowser();
   const page = await browser.newPage();

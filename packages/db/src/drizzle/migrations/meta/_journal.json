@@ -50,6 +50,27 @@
       "when": 1704917852322,
       "tag": "0006_red_valkyrie",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1705562698323,
+      "tag": "0007_equal_russian",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1705743349467,
+      "tag": "0008_wild_owl",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1705749257288,
+      "tag": "0009_stiff_hawkeye",
+      "breakpoints": true
     }
   ]
 }

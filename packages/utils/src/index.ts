@@ -7,6 +7,6 @@ export * from './date-functions/luxon-to-db-format';
 export * from './date-functions/luxon-to-manila-sql-format';
 export * from './date-functions/manila-luxon-date-to-crawl-data-at-format';
 export * from './number-functions/clean-floating-number';
+export * from './number-functions/percent-change';
 export * from './string-functions/replace-all-occurances';
 export * from './string-functions/slugify';
-export * from './string-functions/trim-word-from-beginning';

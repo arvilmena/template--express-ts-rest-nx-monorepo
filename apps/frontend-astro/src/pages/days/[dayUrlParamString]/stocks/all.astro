@@ -31,6 +31,7 @@ import {
 import { dailyCategoryToHumanReadable } from '@myawesomeorg/db';
 import { DateTime } from 'luxon';
 import CompanyDataTable from '../../../../components/CompanyDataTable.astro';
+import CompanyTooltips from 'apps/frontend-astro/src/components/CompanyTooltips.astro';
 const { dayUrlParamString } = Astro.params;
 
 const swsCompanies = await crawlDataSwsCompanyRepository.getForDayByLuxon(
@@ -55,6 +56,7 @@ const swsCompanies = await crawlDataSwsCompanyRepository.getForDayByLuxon(
 
   <!-- <pre>{dayUrlParamString} => {dayUrlParamStringToLuxon(dayUrlParamString).toMillis()}</pre> -->
   <CompanyDataTable companies={swsCompanies} />
+  <CompanyTooltips companies={swsCompanies} />
 
   <!-- <button
     id="getDetails"

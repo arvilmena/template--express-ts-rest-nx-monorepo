@@ -2,6 +2,7 @@
 import { relations } from 'drizzle-orm';
 import {
   blob,
+  index,
   integer,
   real,
   sqliteTable,
@@ -178,6 +179,8 @@ export const crawlDataSwsCompany = sqliteTable(
     sharePrice: real('share_price'),
     pe: real('value_pe'),
     ps: real('value_ps'),
+    pb: real('value_pb'),
+    peg: real('value_peg'),
     roe: real('roe'),
     priceTarget: real('value_price_target'),
     priceTargetAnalystCount: real('value_price_target_analyst_count'),
@@ -189,6 +192,7 @@ export const crawlDataSwsCompany = sqliteTable(
     roeFuture3y: real('future_roe_3y'),
     peForward1y: real('future_forward_pe_1y'),
     psForward1y: real('future_forward_ps_1y'),
+    cashOpsGrowthAnnual: real('future_cash_ops_growth_annual'),
 
     peerPreferredComparison: text('peer_preferred_multiple'),
     peerPreferredValue: real(
@@ -226,6 +230,7 @@ export const crawlDataSwsCompanyRelations = relations(
   ({ many }) => ({
     freeCashFlows: many(crawlDataSwsCompanyFreeCashFlow),
     categories: many(crawlDataSwsCompanyCategory),
+    // statementIds: many(crawlDataSwsCompanyStatement),
   }),
 );
 
@@ -466,3 +471,60 @@ export const crawlDataSwsCompanyIndustryAverage = sqliteTable(
     };
   },
 );
+
+export const swsCompanyStatement = sqliteTable(
+  'sws_company_statement',
+  {
+    id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+    swsId: integer('sws_id').notNull(),
+    title: text('title').notNull(),
+    description: text('description').notNull(),
+    area: text('area').notNull(),
+    severity: text('severity'),
+    state: text('state'),
+    outcome_name: text('outcome_name'),
+  },
+  (table) => {
+    return {
+      unq: unique('sws_company_statement_unique').on(
+        table.swsId,
+        table.title,
+        table.description,
+        table.area,
+      ),
+      swsIdIdx: index('sws_id_idx').on(table.swsId),
+      titleIdx: index('title_idx').on(table.title),
+      areaIdx: index('area_idx').on(table.area),
+      descriptionIdx: index('description_idx').on(table.description),
+      severityIdx: index('severity_idx').on(table.severity),
+    };
+  },
+);
+
+export const crawlDataSwsCompanyStatement = sqliteTable(
+  'crawl_data_sws_company__statement',
+  {
+    id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+    crawlDataSwsCompanyId: integer('crawl_data_sws_company_id', {
+      mode: 'number',
+    }).references(() => crawlDataSwsCompany.id, { onDelete: 'cascade' }),
+    swsCompanyStatementId: integer('sws_company_statement_id', {
+      mode: 'number',
+    }).references(() => swsCompanyStatement.id, { onDelete: 'cascade' }),
+  },
+  (table) => {
+    return {
+      unq: unique('crawl_data_sws_company__statement_unique').on(
+        table.crawlDataSwsCompanyId,
+        table.swsCompanyStatementId,
+      ),
+    };
+  },
+);
+
+// export const crawlDataSwsCompanyStatementRelations = relations(
+//   crawlDataSwsCompanyStatement,
+//   ({ one }) => ({
+//     swsCompanyStatement: one(swsCompanyStatement),
+//   }),
+// );
